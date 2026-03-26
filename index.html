@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tata's Medical Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;font-size:15px}
+.app{max-width:800px;margin:0 auto;padding:12px 12px 60px}
+
+/* PATIENT BAR */
+.patient-bar{background:#fff;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.avatar{width:52px;height:52px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#1a73e8;flex-shrink:0}
+.patient-name{font-weight:700;font-size:17px}
+.patient-sub{font-size:12px;color:#636366;margin-top:3px;line-height:1.5}
+
+/* URGENT BANNER */
+.urgent-banner{background:#fff8e1;border:1.5px solid #ffc107;border-radius:14px;padding:14px;margin-bottom:12px;font-size:13px;color:#856404}
+.urgent-title{font-weight:700;font-size:14px;color:#7a5a00;margin-bottom:8px}
+.urgent-item{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.urgent-item:last-child{margin-bottom:0}
+.udot{width:7px;height:7px;border-radius:50%;background:#ffc107;flex-shrink:0;margin-top:5px}
+
+/* TABS */
+.tabs-wrap{position:relative;margin-bottom:14px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#ccc transparent}
+.tabs::-webkit-scrollbar{height:3px}
+.tabs::-webkit-scrollbar-track{background:transparent}
+.tabs::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+.tabs-fade{position:absolute;right:0;top:0;bottom:4px;width:64px;background:linear-gradient(to right,rgba(242,242,247,0),rgba(242,242,247,1));pointer-events:none;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;transition:opacity 0.2s}
+.scroll-hint{font-size:20px;color:#888}
+.tab{padding:9px 16px;border:1.5px solid #e0e0e0;border-radius:22px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#636366;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all 0.15s}
+.tab.active{background:#1a73e8;color:#fff;border-color:#1a73e8;font-weight:600}
+.panel{display:none}.panel.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.07);overflow:hidden}
+.card-top{padding:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-top.static{cursor:default}
+.card-title{font-weight:600;font-size:14px;line-height:1.4}
+.card-sub{font-size:12px;color:#636366;margin-top:3px;line-height:1.4}
+.card-body{padding:0 14px 14px;font-size:13px;color:#3a3a3c;line-height:1.7;border-top:1px solid #f2f2f7;padding-top:12px}
+.card-body.hidden{display:none}
+.chevron{font-size:12px;color:#aeaeb2;flex-shrink:0;margin-top:2px;transition:transform 0.2s}
+.chevron.open{transform:rotate(180deg)}
+
+/* BADGES */
+.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;display:inline-block;white-space:nowrap;flex-shrink:0}
+.badge-red{background:#fde8e8;color:#c0392b}
+.badge-orange{background:#fef3e2;color:#b45309}
+.badge-green{background:#e6f4ea;color:#1e7e34}
+.badge-blue{background:#e8f0fe;color:#1a73e8}
+.badge-gray{background:#f2f2f7;color:#636366}
+.badge-purple{background:#f0ebfe;color:#6d28d9}
+.badge-yellow{background:#fff8e1;color:#856404;border:1px solid #ffc107}
+
+/* SECTION HEADERS */
+.section-header{font-size:11px;font-weight:700;color:#636366;text-transform:uppercase;letter-spacing:0.06em;margin:18px 0 8px;padding:0 2px}
+
+/* OVERVIEW GRID */
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.metric{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.07)}
+.metric-num{font-size:26px;font-weight:700;color:#1a73e8}
+.metric-lbl{font-size:11px;color:#636366;margin-top:2px;font-weight:500}
+
+/* INFO ROWS */
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;padding:6px 0;border-bottom:1px solid #f2f2f7;gap:10px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:#636366;font-size:12px;flex-shrink:0}
+.info-val{text-align:right;font-weight:500;color:#1c1c1e;font-size:13px;line-height:1.4}
+
+/* PLAIN LANGUAGE BOX */
+.plain-box{background:#f0f7ff;border-radius:10px;padding:11px 13px;margin-bottom:10px;font-size:13px;color:#1a3a5c;line-height:1.7}
+.plain-box strong{display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;color:#1a73e8;margin-bottom:4px}
+
+/* LAB VALUES */
+.lab-row{display:flex;align-items:flex-start;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f2f2f7;gap:8px}
+.lab-row:last-child{border-bottom:none}
+.lab-name{font-size:13px;font-weight:500;flex:1}
+.lab-detail{font-size:12px;color:#636366;margin-top:2px}
+.lab-right{text-align:right;flex-shrink:0}
+.lab-val{font-size:14px;font-weight:700}
+.lab-range{font-size:11px;color:#636366;margin-top:2px}
+.lab-interp{font-size:11px;margin-top:2px;font-weight:500}
+.val-crit{color:#c0392b}
+.val-high{color:#b45309}
+.val-normal{color:#1e7e34}
+.val-low{color:#1a73e8}
+
+/* RED FLAGS */
+.flag-card{border-radius:14px;padding:16px;margin-bottom:10px}
+.flag-911{background:#fde8e8;border:2px solid #c0392b}
+.flag-call{background:#fef3e2;border:2px solid #f39c12}
+.flag-watch{background:#e6f4ea;border:1.5px solid #27ae60}
+.flag-title{font-weight:700;font-size:15px;margin-bottom:10px}
+.flag-911 .flag-title{color:#c0392b}
+.flag-call .flag-title{color:#b45309}
+.flag-watch .flag-title{color:#1e7e34}
+.flag-item{display:flex;gap:8px;margin-bottom:6px;font-size:13px;line-height:1.5;align-items:flex-start}
+.flag-item:last-child{margin-bottom:0}
+.flag-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dot-red{background:#c0392b}
+.dot-orange{background:#e67e22}
+.dot-green{background:#27ae60}
+.spanish{font-size:12px;color:#636366;font-style:italic;margin-top:2px}
+
+/* LINKS */
+.learn-more{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#1a73e8;margin-top:8px;text-decoration:none;font-weight:500}
+.learn-more:hover{text-decoration:underline}
+.link-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+
+/* SOURCE REF */
+.source-ref{font-size:11px;color:#1a73e8;margin-top:10px;padding-top:8px;border-top:1px solid #f2f2f7}
+
+/* QUESTION CARDS */
+.q-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f2f2f7;align-items:flex-start;font-size:13px;line-height:1.5}
+.q-item:last-child{border-bottom:none}
+.q-num{width:22px;height:22px;border-radius:50%;background:#e8f0fe;color:#1a73e8;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.q-urgent{width:22px;height:22px;border-radius:50%;background:#fde8e8;color:#c0392b;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* DOC PAGES */
+.doc-pages{font-size:12px;background:#f8f8f8;border-radius:8px;padding:10px 12px;margin-top:10px;line-height:1.8;color:#3a3a3c}
+.doc-pages span{font-weight:700;color:#1c1c1e}
+.doc-skip{margin-top:6px;font-size:12px;color:#888;font-style:italic}
+.howto-box{background:#e8f0fe;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:#1a4a8a;line-height:1.6}
+
+/* CAREGIVER */
+.care-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.care-num{width:28px;height:28px;border-radius:50%;background:#1a73e8;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.care-content{flex:1}
+.care-title{font-weight:600;font-size:14px;margin-bottom:3px}
+.care-body{font-size:13px;color:#3a3a3c;line-height:1.6}
+.spanish-note{background:#fff8e1;border-radius:8px;padding:8px 10px;margin-top:6px;font-size:12px;color:#856404}
+
+/* SURGERY */
+.surgery-status{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px}
+.s-past{background:#f2f2f7;color:#636366}
+.s-upcoming{background:#fde8e8;color:#c0392b}
+.s-pending{background:#fef3e2;color:#b45309}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+  .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .info-val{font-size:12px}
+  .tab{padding:8px 12px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- PATIENT BAR -->
+<div class="patient-bar">
+  <div class="avatar">JL</div>
+  <div style="flex:1;min-width:0">
+    <div class="patient-name">Juan Jose Lopez</div>
+    <div class="patient-sub">DOB: March 20, 1945 · Age 81 · Male · MRN: 5483437<br>No known drug allergies · Primary language: Spanish</div>
+  </div>
+  <div style="flex-shrink:0;text-align:right">
+    <span class="badge badge-blue">Eisenhower Health</span><br>
+    <span style="font-size:11px;color:#636366">Molina + Alignment Medicare</span>
+  </div>
+</div>
+
+<!-- URGENT BANNER -->
+<div class="urgent-banner">
+  <div class="urgent-title">⚠ Upcoming appointments & pending</div>
+  <div class="urgent-item"><div class="udot"></div><div><strong>3/26 Thu 8:15am</strong> — Insulin teaching · Marcela Amezquita PharmD · Desert Oasis Suite A103, Indio · (760) 775-9641</div></div>
+  <div class="urgent-item"><div class="udot"></div><div><strong>3/30 Mon 10:00am</strong> — PCP Scott Russell DO · Bermuda Dunes · (760) 610-1500 · CRITICAL — confirm he attends</div></div>
+  <div class="urgent-item"><div class="udot"></div><div>Vascular surgery — referral placed, <strong>appointment NOT confirmed</strong> · call to schedule urgently</div></div>
+  <div class="urgent-item"><div class="udot"></div><div>Pulmonology (Shansby Clinic) — referral placed, <strong>appointment NOT confirmed</strong> · call 760-834-3564</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+<div class="tabs" id="tabsRow">
+  <button class="tab active" onclick="switchTab('overview')">Overview</button>
+  <button class="tab" onclick="switchTab('conditions')">Conditions</button>
+  <button class="tab" onclick="switchTab('medications')">Medications</button>
+  <button class="tab" onclick="switchTab('appointments')">Appointments</button>
+  <button class="tab" onclick="switchTab('visits')">Visits</button>
+  <button class="tab" onclick="switchTab('surgeries')">Surgeries</button>
+  <button class="tab" onclick="switchTab('doctors')">Doctors</button>
+  <button class="tab" onclick="switchTab('labs')">Labs</button>
+  <button class="tab" onclick="switchTab('redflags')">🚨 Red Flags</button>
+  <button class="tab" onclick="switchTab('questions')">Questions to Ask</button>
+  <button class="tab" onclick="switchTab('caregiver')">Caregiver Guide</button>
+  <button class="tab" onclick="switchTab('notes')">Notes</button>
+  <button class="tab" onclick="switchTab('documents')">Documents</button>
+</div>
+<div class="tabs-fade" id="tabsFade"><span class="scroll-hint">›</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- OVERVIEW -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-overview" class="panel active">
+  <div class="summary-grid">
+    <div class="metric"><div class="metric-num">8</div><div class="metric-lbl">Conditions</div></div>
+    <div class="metric"><div class="metric-num">19</div><div class="metric-lbl">Medications</div></div>
+    <div class="metric"><div class="metric-num">4</div><div class="metric-lbl">Visits</div></div>
+    <div class="metric"><div class="metric-num">6</div><div class="metric-lbl">Providers</div></div>
+  </div>
+
+  <div class="section-header">Most urgent right now</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm — 5cm</div><div class="card-sub">Bulge in the main artery near his heart · confirmed March 2026</div></div>
+      <span class="badge badge-red">Urgent</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this means in plain language</strong>The main artery that carries blood from his heart has a bulge in it. If it gets to 5.5cm it likely needs emergency surgery. He is at 5cm right now — very close. This is why the vascular surgery appointment must be confirmed as soon as possible.</div>
+      911 immediately for: sudden severe chest, back, or stomach pain · vascular surgery appointment not yet confirmed
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">New Diabetes — blood sugar was dangerously high</div><div class="card-sub">Diagnosed March 2026 · A1c 10.0 · glucose peaked at 775</div></div>
+      <span class="badge badge-red">Active</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this means in plain language</strong>His blood sugar was nearly 8x the normal level when he arrived at the ER. He is now on medication and insulin. The insulin plan will be confirmed at tomorrow's pharmacy visit. Monitoring his blood sugar at home every day is essential.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Lung Nodule — needs follow-up</div><div class="card-sub">Small spot found on CT scan · March 2026</div></div>
+      <span class="badge badge-orange">Monitoring</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this means in plain language</strong>A small spot was found in his right lung on the CT scan. Most of the time these are harmless, but because of its irregular edges it needs to be checked further. The lung specialist referral has been placed but the appointment is not yet confirmed.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Patient info</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Contact & Insurance</div></div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Home phone</span><span class="info-val">442-230-9513</span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">84851 Backbad Avenida Apt 149, Coachella CA 92236</span></div>
+      <div class="info-row"><span class="info-label">Primary insurance</span><span class="info-val">Alignment Health Medicare Advantage (DOHC)</span></div>
+      <div class="info-row"><span class="info-label">Secondary</span><span class="info-val">Molina MCAL HMO</span></div>
+      <div class="info-row"><span class="info-label">MyChart portal</span><span class="info-val">mychart.eisenhowerhealth.org/mychart</span></div>
+      <div class="info-row"><span class="info-label">Activation code</span><span class="info-val">6BG2H-W5HW9-WX8QS (exp 6/22/2026)</span></div>
+      <div class="info-row"><span class="info-label">MyChart action</span><span class="info-val">Set up proxy/caregiver access for Brandon at next visit</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CONDITIONS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-conditions" class="panel">
+  <div class="section-header">Active / urgent — tap to expand</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Type 2 Diabetes Mellitus (new)</div><div class="card-sub">Diagnosed March 2026 · A1c 10.0</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">Active</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>Diabetes means his body can't control his blood sugar properly. His sugar was extremely high (775 — normal is under 100 fasting). He now needs medication and insulin every day to keep it controlled. Left uncontrolled it damages the kidneys, eyes, heart, and nerves.</div>
+      A1c 10.0 (normal &lt;5.7%) · glucose peaked 775 on ER arrival · steroid-induced exacerbation on top of new DM · now on glipizide + insulin · not genetic per family · PCP follow-up 3/30
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/type-2-diabetes/symptoms-causes/syc-20351193" target="_blank">📖 Mayo Clinic — Diabetes</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/type-2-diabetes/symptoms-causes/syc-20351193" target="_blank">📖 Mayo Clinic — Diabetes (Español)</a>
+      </div>
+      <div class="source-ref">📄 Eisenhower p.2 · Desert Oasis p.1</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm — 5cm</div><div class="card-sub">Bulge in main heart artery · CT confirmed 3/24/2026</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">Urgent</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>The aorta is the biggest artery in the body — it carries blood directly from the heart. His has a bulge (aneurysm) in the upper section near the heart. This is NOT in the belly area — the belly aorta is normal. A bulge can rupture (burst) if it gets too big, which is life-threatening. He is at 5cm — the danger threshold is about 5.5cm. Surgery will likely be needed soon.</div>
+      Located on ascending thoracic aorta (abdominal aorta is NORMAL per CT) · without rupture · surgical threshold ~5.5cm · may be pressing on esophagus causing swallowing difficulty · vascular surgery referral placed — appt NOT confirmed
+      <br><br><strong style="color:#c0392b">911 immediately for sudden severe chest, back, or abdominal pain</strong>
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/aortic-aneurysm/symptoms-causes/syc-20369472" target="_blank">📖 Mayo Clinic — Aortic Aneurysm</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/aortic-aneurysm/symptoms-causes/syc-20369472" target="_blank">📖 Mayo Clinic — Aneurisma (Español)</a>
+      </div>
+      <div class="source-ref">📄 Eisenhower CT p.9 · Desert Oasis p.1</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Pulmonary Nodule — 7x6mm right lung</div><div class="card-sub">Small spot found on CT scan · needs follow-up</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Investigating</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>A small spot was found in his right lung during the CT scan. Most lung nodules are harmless (scar tissue, old infections). However because this one has irregular edges it needs further testing to make sure it is not something more serious. The lung specialist will decide if a biopsy or more imaging is needed.</div>
+      7x6mm with irregular margins · additional 5mm nodule noted · lung granulomas present · referred to Shansby Pulmonary Clinic · appt NOT confirmed · former smoker (quit 25 years ago)
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/lung-nodules/symptoms-causes/syc-20350888" target="_blank">📖 Mayo Clinic — Lung Nodules</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/lung-nodules/symptoms-causes/syc-20350888" target="_blank">📖 Mayo Clinic — Nódulos (Español)</a>
+      </div>
+      <div class="source-ref">📄 Eisenhower CT p.8–9</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Acute Kidney Insufficiency</div><div class="card-sub">Kidneys not working at full capacity · labs 3/23–3/24</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Monitoring</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>His kidneys are not filtering blood as well as they should be. This was likely made worse by the very high blood sugar and dehydration. The kidneys may improve as his blood sugar comes down. Important: he should NOT take ibuprofen, Advil, Motrin, Aleve, or naproxen — these damage kidneys further. Use Tylenol (acetaminophen) for pain instead.</div>
+      eGFR 35–43 (Stage 3 CKD range) · BUN 53–60 · Creatinine 1.6–1.9 · proteinuria &gt;300 mg/dL · blood in urine (moderate) · avoid all NSAIDs · stay hydrated
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/chronic-kidney-disease/symptoms-causes/syc-20354521" target="_blank">📖 Mayo Clinic — Kidney Disease</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/chronic-kidney-disease/symptoms-causes/syc-20354521" target="_blank">📖 Mayo Clinic — Riñones (Español)</a>
+      </div>
+      <div class="source-ref">📄 Eisenhower labs p.4–5</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">COPD / Asthma — recent flare-up</div><div class="card-sub">Breathing condition · treated Feb–March 2026</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Managed</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>COPD and asthma both make it harder to breathe by narrowing the airways. He had a bad flare-up in February–March 2026 and needed steroids and antibiotics. The steroids helped his breathing but dramatically raised his blood sugar, which contributed to the ER visit. His rescue inhaler has reportedly not been working well — this needs to be discussed with the lung specialist.</div>
+      Treated with prednisone, azithromycin, amoxicillin, inhalers, nebulizers · steroids STOPPED 3/23 (elevating blood sugar) · rescue inhaler not working well per patient · flu tested negative x2 · pulmonology referral placed
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/copd/symptoms-causes/syc-20353679" target="_blank">📖 Mayo Clinic — COPD</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/copd/symptoms-causes/syc-20353679" target="_blank">📖 Mayo Clinic — EPOC (Español)</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Chronic / long-term conditions</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">High Blood Pressure (Hypertension)</div><div class="card-sub">On 3 blood pressure medications</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Managed</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>High blood pressure means his heart is working too hard to push blood through his arteries. This is especially dangerous for him because the extra pressure puts stress on the bulge in his aorta and could cause it to grow or rupture faster. Keeping blood pressure controlled is critical.</div>
+      On olmesartan 20mg + amlodipine 10mg + metoprolol tartrate 50mg · BP still elevated 175/63 on 3/24 · critical to control given aneurysm
+      <div class="link-group">
+        <a class="learn-more" href="https://www.mayoclinic.org/diseases-conditions/high-blood-pressure/symptoms-causes/syc-20373410" target="_blank">📖 Mayo Clinic — High Blood Pressure</a>
+        <a class="learn-more" href="https://www.mayoclinic.org/es/diseases-conditions/high-blood-pressure/symptoms-causes/syc-20373410" target="_blank">📖 Mayo Clinic — Presión Alta (Español)</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Heart Disease / Aortic Valve Replacement</div><div class="card-sub">Prior open heart surgery · history of heart rhythm problem</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Managed</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>He had open heart surgery in the past to replace a heart valve that wasn't working properly. The CT scan confirmed this — you can see the surgical wires in the images. He also had a heart rhythm problem (arrhythmia) that was being treated with a medication called amiodarone. That medication was stopped at the ER visit — it's not clear yet what will replace it. His cardiologist needs to be involved.</div>
+      Aortic valve replaced (sternotomy wires on CT) · aortic valve stenosis noted 10/2018 · LAD + RCA coronary calcification · amiodarone STOPPED 3/23 · arrhythmia history suspected · on aspirin 81mg + metoprolol · date of surgery unknown
+      <div class="source-ref">📄 Eisenhower CT p.8 · problem list p.2</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">High Cholesterol (Hyperlipidemia)</div><div class="card-sub">On pravastatin · managed</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-green">Managed</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>Too much cholesterol in the blood can clog arteries and increase the risk of heart attack and stroke. He takes a statin medication (pravastatin) once a day at bedtime to keep his cholesterol under control.</div>
+      On pravastatin (Pravachol) 20mg once daily at bedtime
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Enlarged Prostate (BPH) · Acid Reflux (GERD)</div><div class="card-sub">Both managed with medications</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-green">Managed</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>BPH (enlarged prostate) is very common in older men. It can make urination slow or difficult. He takes two medications for this. GERD is acid reflux — stomach acid backing up into the throat. He takes omeprazole (Prilosec) for this once a day.</div>
+      BPH: finasteride 5mg daily + tamsulosin 0.4mg 2x daily · mild bladder wall thickening on CT<br>
+      GERD: esomeprazole (Prilosec) 20mg once daily
+    </div>
+  </div>
+
+  <div class="section-header">Incidental findings (found on CT — being monitored)</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Spinal Disc Disease · Diverticulosis · Hernias · Liver Spot</div><div class="card-sub">Found incidentally on CT 3/24/2026</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-gray">Monitoring</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>In plain language</strong>These were found during the CT scan but were not the reason for the visit. Spinal disc disease means the cushions between his spine bones are worn down — common with age. Diverticulosis means small pouches in the colon — also common. The hernias are small bulges of fatty tissue — not currently causing problems. The liver spot may be a simple cyst and will be monitored.</div>
+      Severe L4-L5, L5-S1 disc narrowing · multiple colonic diverticula · bilateral inguinal hernias (2.9cm left, 1.9cm right) · umbilical hernia 1.8cm · 1.9cm hypodense focus right liver lobe (possible cyst)
+      <div class="source-ref">📄 Eisenhower CT p.9</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- MEDICATIONS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-medications" class="panel">
+  <div class="section-header">Diabetes medications — NEW</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">glipizide (Glucotrol) 2.5mg</div><div class="card-sub">2x daily · before breakfast and before dinner</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">NEW</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>Tells the pancreas to release more insulin to lower blood sugar. Must be taken BEFORE meals — not after. Taking it without eating can cause blood sugar to drop too low.</div>
+      Started 3/23/2026 · take before breakfast and before dinner · do NOT skip meals after taking this
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Insulin — home regimen TBD</div><div class="card-sub">To be confirmed at PharmD visit 3/26</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">UPDATE NEEDED</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What insulin does</strong>Insulin helps the body's cells absorb sugar from the blood. Without enough insulin, blood sugar stays dangerously high. He will inject insulin using a pen device — similar to an EpiPen. His wife should learn how to help with this. Update this after the 3/26 PharmD visit.</div>
+      <strong>Insulin type:</strong> TBD<br>
+      <strong>Dose:</strong> TBD<br>
+      <strong>When:</strong> TBD<br>
+      <strong>Device:</strong> Pen recommended (simple, no programming needed)<br>
+      <strong>CGM note:</strong> Ask about FreeStyle Libre — no finger pricks, Medicare may cover, wife can check easily
+    </div>
+  </div>
+
+  <div class="section-header">Heart & blood pressure medications</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">metoprolol tartrate 50mg</div><div class="card-sub">2x daily with meals · heart rate + blood pressure</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Heart / BP</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>Slows the heart rate and reduces blood pressure. Also helps protect the heart after prior heart problems. Must be taken with food. Do NOT stop suddenly without talking to the doctor — this can be dangerous.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">olmesartan 20mg</div><div class="card-sub">Once daily · blood pressure</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">BP</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>Relaxes blood vessels to lower blood pressure. Especially important given the aneurysm — lower pressure = less stress on the bulge.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">amlodipine 10mg</div><div class="card-sub">Once daily · blood pressure (dose increased from 5mg)</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">BP</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>A calcium channel blocker — helps relax the arteries and lower blood pressure. Dose was recently increased from 5mg to 10mg.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">aspirin 81mg (delayed release)</div><div class="card-sub">Once daily · heart protection</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Cardiovascular</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>Low-dose aspirin helps prevent blood clots that can cause heart attacks and strokes. Important for someone with his heart history.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">pravastatin (Pravachol) 20mg</div><div class="card-sub">Once daily at bedtime · cholesterol</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Cholesterol</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>A statin — lowers bad cholesterol (LDL) to protect the heart and arteries. Take at bedtime because the body makes most cholesterol at night.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Breathing medications</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">fluticasone/salmeterol 232/14mcg inhaler</div><div class="card-sub">1 puff 2x daily ~12hrs apart · CONTROLLER — use every day</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-purple">Daily inhaler</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>This is a controller inhaler — it reduces airway inflammation over time. It MUST be taken every single day, morning and night, even if he feels fine. It does NOT work immediately in an emergency — that's what the rescue inhaler is for.</div>
+      1 puff every 12 hours (example: 8am and 8pm) · rinse mouth after use to prevent thrush
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">albuterol / Ventolin HFA 90mcg inhaler</div><div class="card-sub">2 puffs every 4–6hrs as needed · RESCUE inhaler</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-purple">Rescue — PRN</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>This is the rescue inhaler — use it when he suddenly feels short of breath or is wheezing. It works quickly (within minutes) to open the airways. Patient reports it has NOT been working well — this must be discussed with the lung specialist.</div>
+      Use when short of breath or wheezing · works within minutes · not working well per patient — flag at pulmonology visit
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">albuterol 1.25mg nebulization</div><div class="card-sub">Every 4–6hrs as needed for SOB · requires nebulizer machine</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-purple">Nebulizer — PRN</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this medication does</strong>Same medication as the rescue inhaler but delivered through a nebulizer machine as a mist — easier to breathe in for elderly patients. More effective than an inhaler in some cases. Confirm he has a nebulizer machine at home.</div>
+      Started 3/19/2026 · confirm he has nebulizer machine · use when rescue inhaler is not enough
+    </div>
+  </div>
+
+  <div class="section-header">Other current medications</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">esomeprazole · finasteride · tamsulosin · doxycycline</div><div class="card-sub">Stomach, prostate, and antibiotic medications</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-gray">Other</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Esomeprazole (Prilosec) 20mg</strong> — once daily · for acid reflux (GERD)<br><br>
+      <strong>Finasteride 5mg</strong> — once daily · shrinks enlarged prostate (BPH)<br><br>
+      <strong>Tamsulosin 0.4mg</strong> — 2x daily · relaxes prostate muscles to improve urine flow (BPH)<br><br>
+      <strong>Doxycycline 100mg</strong> — 2x daily · antibiotic started 1/29/2026 · confirm with PCP if still needed<br><br>
+      <strong>Acetaminophen (Tylenol) 500mg</strong> — every 4hrs as needed for temp &gt;101°F or mild pain · USE INSTEAD OF ibuprofen/Advil (kidneys compromised)<br><br>
+      <strong>Fish oil</strong> — once daily<br>
+      <strong>Saline nasal spray 3%</strong> — 2–3x daily as needed<br>
+      <strong>Triamcinolone 0.1% cream</strong> — topical 2x daily (skin)<br>
+      <strong>Ketoconazole 2% cream</strong> — topical 2x daily x14 days (antifungal skin)<br>
+      <strong>Clotrimazole/betamethasone cream</strong> — topical 2x daily x2 weeks (started 3/19/2026)
+    </div>
+  </div>
+
+  <div class="section-header">Stopped medications</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">amiodarone (Pacerone) 200mg — STOPPED 3/23/2026</div><div class="card-sub">Heart rhythm medication · stopped at ER · needs follow-up</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">STOPPED</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Amiodarone is used to control dangerous heart rhythm problems (arrhythmia). The fact that he was on it means he has a history of arrhythmia. It was stopped at the ER but nothing was prescribed to replace it. This is a gap that needs to be addressed with a cardiologist. Ask about this at the 3/30 PCP visit.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">prednisone 20mg — STOPPED 3/23/2026</div><div class="card-sub">Oral steroid · stopped because it was raising blood sugar</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">STOPPED</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Prednisone is a powerful steroid that helps breathing but can dramatically raise blood sugar. His blood sugar was nearly 8x normal — this steroid was a major contributing factor. It has been stopped and should NOT be restarted without careful consideration of the blood sugar impact.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- APPOINTMENTS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-appointments" class="panel">
+  <div class="section-header">Upcoming</div>
+
+  <div class="card" style="border:2px solid #ffc107">
+    <div class="card-top static">
+      <div><div class="card-title">Insulin Teaching — Marcela Amezquita, PharmD</div><div class="card-sub">March 26, 2026 · Thursday · 8:15 AM</div></div>
+      <span class="badge badge-yellow">Tomorrow</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Facility</span><span class="info-val">Desert Oasis Healthcare</span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">81880 Dr Carreon Blvd Suite A103, Indio CA 92201</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 775-9641</span></div>
+      <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">Establish home insulin regimen + medication teaching</span></div>
+      <div class="info-row"><span class="info-label">Bring</span><span class="info-val">Family member · pen and paper · all current medications</span></div>
+      <div class="info-row"><span class="info-label">Ask about</span><span class="info-val">FreeStyle Libre CGM · pen vs pump · fixed simple dose · Spanish instructions</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="border:2px solid #c0392b">
+    <div class="card-top static">
+      <div><div class="card-title">PCP Follow-up — Scott A. Russell, DO</div><div class="card-sub">March 30, 2026 · Monday · 10:00 AM · CRITICAL</div></div>
+      <span class="badge badge-red">Must attend</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-320-8814 / 760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">Full follow-up after ER visit · review all new diagnoses</span></div>
+      <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Insulin regimen · aneurysm surgery timeline · amiodarone replacement · kidney follow-up · proxy MyChart access</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Vascular Surgery Consult</div><div class="card-sub">Ascending thoracic aortic aneurysm · referral placed 3/23</div></div>
+      <span class="badge badge-red">Not confirmed</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Referral placed — NO date confirmed yet</span></div>
+      <div class="info-row"><span class="info-label">Action</span><span class="info-val">Call Desert Oasis or PCP office to confirm appointment</span></div>
+      <div class="info-row"><span class="info-label">Urgency</span><span class="info-val">High — at 5cm he is close to 5.5cm surgical threshold</span></div>
+      <div class="info-row"><span class="info-label">Surgery discussed</span><span class="info-val">April 2026 — needs confirmation</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Pulmonology — Shansby Pulmonary Disease Clinic</div><div class="card-sub">Lung nodule follow-up · referral placed 3/23</div></div>
+      <span class="badge badge-red">Not confirmed</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Shansby Bldg Ste 201, Rancho Mirage CA 92270</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-834-3564</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Referral marked done — NO date confirmed yet</span></div>
+      <div class="info-row"><span class="info-label">Action</span><span class="info-val">Call 760-834-3564 to confirm appointment date</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Past appointments</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Immediate Care Follow-up — Desert Oasis</div><div class="card-sub">March 24, 2026 · Michelle Garrido · completed</div></div>
+      <span class="badge badge-green">Done</span>
+    </div>
+    <div class="card-body">BG 344 · A1c 10 confirmed · dysphagia noted · vascular referral placed · insulin management referral sent · PCP appt 3/30 scheduled</div>
+  </div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">ER Visit — Tennity ED, Eisenhower Health</div><div class="card-sub">March 23, 2026 · John Keller MD · completed</div></div>
+      <span class="badge badge-green">Done</span>
+    </div>
+    <div class="card-body">Glucose 775 · A1c 10 · AAA 5cm diagnosed · lung nodule found · renal insufficiency · IV fluids + insulin · CT + ECG · troponin normal · discharged same day</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- VISITS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-visits" class="panel">
+  <div class="section-header">All visits — newest first</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">ER Visit — Tennity Emergency Department</div><div class="card-sub">March 23, 2026 · Eisenhower Health · not admitted</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">ER</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Attending:</strong> John Keller, MD<br>
+      <strong>Reason:</strong> Fatigue, sunken eyes, rapid weight loss, decreased appetite<br><br>
+      <strong>Diagnosed with:</strong> Hyperglycemia (blood sugar 775) · ascending thoracic aortic aneurysm 5cm · pulmonary nodule 7x6mm · acute renal insufficiency<br><br>
+      <strong>Treated with:</strong> IV fluids · IV insulin · IV potassium · CT scan chest/abdomen/pelvis · ECG x2 · troponin x3 (heart attack ruled out)<br><br>
+      <strong>Discharge instructions:</strong> Start glipizide · STOP prednisone · STOP amiodarone · follow up vascular surgery + PCP · pulmonology referral placed
+      <div class="source-ref">📄 Eisenhower Clinical Summary pp. 1–9</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Immediate Care Follow-up — Desert Oasis</div><div class="card-sub">March 24, 2026 · Michelle Garrido</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Urgent care</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Reason:</strong> Follow-up after ER for high blood sugar<br>
+      <strong>Blood sugar:</strong> 344 (down from 775 at ER)<br>
+      <strong>A1c:</strong> 10.0 confirmed<br>
+      <strong>Swallowing difficulty (dysphagia) noted</strong> — 15lb weight loss in 3 weeks · aneurysm may be pressing on esophagus<br>
+      <strong>Referrals placed:</strong> Expedited vascular surgery · insulin management referral sent to Priority Care<br>
+      <strong>Next:</strong> PCP Scott Russell DO — March 30, 2026 at 10:00am
+      <div class="source-ref">📄 Desert Oasis Urgent Care pp. 1–5</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Urgent Care — COPD / Breathing flare-up</div><div class="card-sub">February–March 2026 · Desert Oasis · multiple visits</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Urgent care</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Reason:</strong> Shortness of breath · COPD exacerbation<br>
+      <strong>Tested:</strong> Flu A + B — negative (2/24 and 3/19)<br>
+      <strong>Treated with:</strong> Prednisone (oral steroid) · azithromycin · amoxicillin/clavulanate · albuterol nebulization · fluticasone/salmeterol inhaler · Ventolin inhaler<br>
+      <strong>Note:</strong> Steroid use from these visits contributed to the blood sugar crisis that led to the 3/23 ER visit
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SURGERIES & PROCEDURES -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-surgeries" class="panel">
+  <div class="section-header">Upcoming procedures</div>
+
+  <div class="card" style="border:1.5px solid #c0392b">
+    <div class="card-top static">
+      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm Repair</div><div class="card-sub">Vascular surgery · discussed for April 2026</div></div>
+      <span class="surgery-status s-upcoming">Pending confirmation</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this surgery involves</strong>Surgery to repair or reinforce the bulge in the main artery near his heart. This is open heart surgery or a less invasive procedure depending on what the vascular surgeon decides. At 5cm with a threshold of ~5.5cm this needs to happen soon.</div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Vascular surgery referral placed — no surgeon or date assigned yet</span></div>
+      <div class="info-row"><span class="info-label">Discussed timeline</span><span class="info-val">April 2026 — needs confirmation</span></div>
+      <div class="info-row"><span class="info-label">Action needed</span><span class="info-val">Confirm appointment with vascular surgeon urgently</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Lung Nodule Workup — biopsy or imaging TBD</div><div class="card-sub">Pulmonology to determine next step</div></div>
+      <span class="surgery-status s-pending">Pending pulmonology appt</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this may involve</strong>The lung specialist will review the CT images and decide whether to monitor with another scan in a few months, or proceed with a biopsy to test the tissue. A biopsy involves taking a small sample from the nodule — usually done with a needle through the chest or through a camera in the airway (bronchoscopy).</div>
+      <div class="info-row"><span class="info-label">Nodule size</span><span class="info-val">7x6mm · irregular margins</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Awaiting pulmonology appointment — not confirmed</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Past surgeries</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Open Heart Surgery — Aortic Valve Replacement</div><div class="card-sub">Date unknown · confirmed via CT scan 3/24/2026</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="surgery-status s-past">Past</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this surgery was</strong>The aortic valve controls blood flow out of the heart. His was not working properly (stenosis — narrowing) and was surgically replaced. The CT scan shows the metal surgical wires (sternotomy wires) from when his chest was opened. This is confirmed as having happened — the date and facility are not yet known.</div>
+      Aortic valve stenosis noted in records 10/15/2018 · sternotomy wires visible on CT 3/24/2026 · was on amiodarone post-surgery (arrhythmia history) · date and facility unknown — ask at 3/30 PCP visit
+      <div class="source-ref">📄 Eisenhower CT p.8 · problem list p.2</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- DOCTORS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-doctors" class="panel">
+  <div class="section-header">Primary care</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Scott A. Russell, DO</div><div class="card-sub">Family Medicine — Primary Care Provider (PCP)</div></div>
+      <span class="badge badge-green">Next appt 3/30</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-320-8814 / 760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">March 30, 2026 at 10:00am — confirm he attends</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Pharmacy / medication management</div>
+  <div class="card" style="border:2px solid #ffc107">
+    <div class="card-top static">
+      <div><div class="card-title">Marcela Amezquita, PharmD</div><div class="card-sub">Clinical Pharmacist — Insulin Teaching</div></div>
+      <span class="badge badge-yellow">3/26 8:15am</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Facility</span><span class="info-val">Desert Oasis Healthcare</span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">81880 Dr Carreon Blvd Suite A103, Indio CA 92201</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 775-9641</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Specialists — referrals placed</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Shansby Pulmonary Disease Clinic</div><div class="card-sub">Pulmonology — lung nodule follow-up</div></div>
+      <span class="badge badge-red">Appt not confirmed</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Shansby Bldg Ste 201, Rancho Mirage CA 92270</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-834-3564</span></div>
+      <div class="info-row"><span class="info-label">Referred by</span><span class="info-val">Dr. Shahram Lotfipour, MD</span></div>
+      <div class="info-row"><span class="info-label">Action</span><span class="info-val">Call to confirm appointment date</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Vascular Surgery</div><div class="card-sub">Ascending aortic aneurysm repair — expedited referral</div></div>
+      <span class="badge badge-red">Appt not confirmed</span>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Referral placed 3/23–3/24 — no surgeon or date confirmed yet</span></div>
+      <div class="info-row"><span class="info-label">Surgery discussed</span><span class="info-val">April 2026 — needs confirmation</span></div>
+      <div class="info-row"><span class="info-label">Action</span><span class="info-val">Call PCP or Desert Oasis to follow up on referral status</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Emergency & urgent care</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Tennity Emergency Department — Eisenhower Health</div><div class="card-sub">For emergencies and worsening symptoms</div></div>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Rancho Mirage CA 92270</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-773-1221</span></div>
+      <div class="info-row"><span class="info-label">Go here if</span><span class="info-val">Sudden chest/back/abdominal pain · confusion · SOB worsens · blood sugar very low and not improving</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Desert Oasis — Immediate Care</div><div class="card-sub">Palm Springs · Indio · Palm Desert · Yucca Valley</div></div>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 775-9641</span></div>
+      <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
+      <div class="info-row"><span class="info-label">Hours</span><span class="info-val">Mon–Fri 8am–8pm · Weekends & holidays 9am–7pm</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- LABS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-labs" class="panel">
+  <div class="howto-box">Color guide: <strong style="color:#c0392b">Red = critical / very abnormal</strong> · <strong style="color:#b45309">Orange = elevated, watch closely</strong> · <strong style="color:#1e7e34">Green = normal</strong>. Normal ranges shown are for adults — some values shift slightly in older patients.</div>
+
+  <div class="section-header">Blood sugar (most important right now)</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Glucose & A1c results</div></div>
+    <div class="card-body">
+      <div class="lab-row">
+        <div class="lab-name">Glucose on ER arrival<div class="lab-detail">3/23/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-crit">775 mg/dL</div><div class="lab-range">Normal fasting: 70–99</div><div class="lab-interp val-crit">Critical — nearly 8x normal</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Glucose after ER treatment<div class="lab-detail">3/23/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-high">552 → 407</div><div class="lab-range">Normal: 70–99 fasting</div><div class="lab-interp val-high">Improving but still very high</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Glucose at urgent care<div class="lab-detail">3/24/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-high">344 mg/dL</div><div class="lab-range">Normal: 70–99 fasting</div><div class="lab-interp val-high">Trending down — still elevated</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Hemoglobin A1c<div class="lab-detail">3/23/2026 · 3-month average</div></div>
+        <div class="lab-right"><div class="lab-val val-crit">10.0%</div><div class="lab-range">Normal: &lt;5.7% · Diabetic: ≥6.5%</div><div class="lab-interp val-crit">Very high — avg glucose ~240</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Urine glucose<div class="lab-detail">3/23/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-crit">&gt;1000 mg/dL</div><div class="lab-range">Normal: negative</div><div class="lab-interp val-crit">Spilling sugar into urine</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Target range (home)<div class="lab-detail">Confirm at 3/30 PCP visit</div></div>
+        <div class="lab-right"><div class="lab-val" style="color:#636366">TBD</div><div class="lab-range">Typical elderly target: 80–180</div><div class="lab-interp" style="color:#636366">Ask PCP on 3/30</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Kidney function</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Kidney labs — 3/23 and 3/24/2026</div></div>
+    <div class="card-body">
+      <div class="lab-row">
+        <div class="lab-name">eGFR (kidney filter rate)<div class="lab-detail">How well kidneys are filtering</div></div>
+        <div class="lab-right"><div class="lab-val val-high">35–43</div><div class="lab-range">Normal: &gt;60 mL/min · Age 81: &gt;45 typical</div><div class="lab-interp val-high">Stage 3 CKD — reduced function</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">BUN (blood urea nitrogen)<div class="lab-detail">Waste product filtered by kidneys</div></div>
+        <div class="lab-right"><div class="lab-val val-high">53–60 mg/dL</div><div class="lab-range">Normal: 7–25 mg/dL</div><div class="lab-interp val-high">Elevated — kidneys struggling</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Creatinine<div class="lab-detail">Muscle waste filtered by kidneys</div></div>
+        <div class="lab-right"><div class="lab-val val-high">1.6–1.9 mg/dL</div><div class="lab-range">Normal male: 0.7–1.3 mg/dL</div><div class="lab-interp val-high">Elevated — kidney strain</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Urine protein<div class="lab-detail">Protein leaking into urine</div></div>
+        <div class="lab-right"><div class="lab-val val-crit">&gt;300 mg/dL</div><div class="lab-range">Normal: negative</div><div class="lab-interp val-crit">Significant — kidney damage sign</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Blood in urine<div class="lab-detail">3/23/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-high">Moderate</div><div class="lab-range">Normal: negative</div><div class="lab-interp val-high">Needs follow-up</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Heart — cardiac labs</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Cardiac labs — 3/23/2026</div></div>
+    <div class="card-body">
+      <div class="lab-row">
+        <div class="lab-name">Troponin I (initial)<div class="lab-detail">Heart attack marker — checked x3</div></div>
+        <div class="lab-right"><div class="lab-val val-normal">19 pg/mL</div><div class="lab-range">Normal: &lt;52 pg/mL</div><div class="lab-interp val-normal">Normal — heart attack ruled out</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Troponin (2hr / 4hr)<div class="lab-detail">Repeat checks to confirm</div></div>
+        <div class="lab-right"><div class="lab-val val-normal">24 / 22 pg/mL</div><div class="lab-range">Normal: &lt;52 pg/mL</div><div class="lab-interp val-normal">Stable — heart attack ruled out</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">CK Total (CPK)<div class="lab-detail">Muscle enzyme — can indicate stress</div></div>
+        <div class="lab-right"><div class="lab-val val-high">239 U/L</div><div class="lab-range">Normal male: 39–308 U/L</div><div class="lab-interp val-normal">Within range — monitor</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Blood count (CBC)</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">CBC — 3/23 and 3/24/2026</div></div>
+    <div class="card-body">
+      <div class="lab-row">
+        <div class="lab-name">WBC (white blood cells)<div class="lab-detail">Infection/inflammation marker</div></div>
+        <div class="lab-right"><div class="lab-val val-high">16.6 → 15.6 K/uL</div><div class="lab-range">Normal: 4.5–11.0 K/uL</div><div class="lab-interp val-high">Elevated — stress or lingering infection</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Neutrophils %<div class="lab-detail">Main infection-fighting cells</div></div>
+        <div class="lab-right"><div class="lab-val val-high">89.6%</div><div class="lab-range">Normal: 50–70%</div><div class="lab-interp val-high">High — consistent with infection/stress</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Hemoglobin<div class="lab-detail">Oxygen-carrying protein in blood</div></div>
+        <div class="lab-right"><div class="lab-val val-normal">15.4–16.1 g/dL</div><div class="lab-range">Normal male: 13.5–17.5 g/dL</div><div class="lab-interp val-normal">Normal — no anemia</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Platelets<div class="lab-detail">Clotting cells</div></div>
+        <div class="lab-right"><div class="lab-val val-normal">252–280 K/uL</div><div class="lab-range">Normal: 150–400 K/uL</div><div class="lab-interp val-normal">Normal</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Other labs</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Additional results — 3/23/2026</div></div>
+    <div class="card-body">
+      <div class="lab-row">
+        <div class="lab-name">Beta-hydroxybutyrate<div class="lab-detail">Ketone level — body burning fat for fuel</div></div>
+        <div class="lab-right"><div class="lab-val val-high">2.12 mmol/L</div><div class="lab-range">Normal: &lt;0.6 mmol/L</div><div class="lab-interp val-high">Elevated — body in sugar crisis</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">TSH (thyroid)<div class="lab-detail">Thyroid hormone level</div></div>
+        <div class="lab-right"><div class="lab-val" style="color:#b45309">0.399 uIU/mL</div><div class="lab-range">Normal: 0.4–4.0 uIU/mL</div><div class="lab-interp" style="color:#636366">Low-normal — being monitored</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Magnesium<div class="lab-detail">Electrolyte mineral</div></div>
+        <div class="lab-right"><div class="lab-val val-high">2.9–3.0 mg/dL</div><div class="lab-range">Normal: 1.7–2.2 mg/dL</div><div class="lab-interp val-high">Mildly elevated</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Blood pressure at ER<div class="lab-detail">3/23/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-high">148/61</div><div class="lab-range">Normal: &lt;120/80 · Acceptable elderly: &lt;140/90</div><div class="lab-interp val-high">Elevated systolic</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Blood pressure at urgent care<div class="lab-detail">3/24/2026</div></div>
+        <div class="lab-right"><div class="lab-val val-crit">175/63</div><div class="lab-range">Normal: &lt;120/80</div><div class="lab-interp val-crit">High — needs better control</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Oxygen saturation (O2 sat)<div class="lab-detail">% of blood carrying oxygen</div></div>
+        <div class="lab-right"><div class="lab-val val-high">95%</div><div class="lab-range">Normal: 95–100%</div><div class="lab-interp val-high">Low-normal — watch given breathing hx</div></div>
+      </div>
+      <div class="lab-row">
+        <div class="lab-name">Influenza A & B<div class="lab-detail">Flu tests — 2/24 and 3/19</div></div>
+        <div class="lab-right"><div class="lab-val val-normal">Negative x2</div><div class="lab-range">—</div><div class="lab-interp val-normal">Not the flu</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- RED FLAGS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-redflags" class="panel">
+  <div class="flag-card flag-911">
+    <div class="flag-title">🚨 Call 911 immediately for any of these</div>
+    <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Sudden severe pain in the chest, back, or stomach</strong><div class="spanish">Dolor fuerte repentino en el pecho, la espalda o el estómago</div>This could mean the aneurysm is rupturing — life-threatening emergency</div></div>
+    <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Cannot wake him up or he is unconscious</strong><div class="spanish">No puede despertarlo / está inconsciente</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Confusion, slurred speech, or face drooping</strong><div class="spanish">Confusión, habla enredada, o cara caída — puede ser un derrame cerebral</div>May be a stroke</div></div>
+    <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Severe shortness of breath — can't speak full sentences</strong><div class="spanish">Dificultad severa para respirar — no puede hablar oraciones completas</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Blood sugar very low AND he is confused or unconscious</strong><div class="spanish">Azúcar muy baja y está confundido o inconsciente</div>Give juice or glucose tablets first if he can swallow · call 911 if no improvement in 15 min</div></div>
+  </div>
+
+  <div class="flag-card flag-call">
+    <div class="flag-title">📞 Call the doctor right away (same day)</div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Blood sugar below 70 or above 300 mg/dL</strong><div class="spanish">Azúcar en la sangre menos de 70 o más de 300</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Signs of low blood sugar:</strong> shaking, sweating, dizziness, sudden hunger, pale skin, irritability<div class="spanish">Síntomas de azúcar baja: temblores, sudoración, mareos, hambre repentina, piel pálida</div>Give 4oz of juice or glucose tablets · recheck in 15 min</div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Fever above 100.4°F (38°C)</strong><div class="spanish">Fiebre más de 38°C (100.4°F)</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Increasing shortness of breath that is not helped by inhaler</strong><div class="spanish">Dificultad para respirar que empeora y el inhalador no ayuda</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Swelling in legs or ankles (new or worsening)</strong><div class="spanish">Hinchazón en las piernas o tobillos</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Much less urine than usual, or no urine</strong><div class="spanish">Mucho menos orina de lo normal, o nada de orina</div>Kidney warning sign</div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>Nausea or vomiting that won't stop</strong><div class="spanish">Náuseas o vómitos que no paran</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-orange"></div><div><strong>New difficulty swallowing or swallowing getting worse</strong><div class="spanish">Nueva dificultad para tragar o empeora</div></div></div>
+  </div>
+
+  <div class="flag-card flag-watch">
+    <div class="flag-title">👀 Watch and monitor — mention at next appointment</div>
+    <div class="flag-item"><div class="flag-dot dot-green"></div><div><strong>Blood sugar consistently above his target range</strong><div class="spanish">Azúcar consistentemente alta</div>Keep a log of morning + evening readings</div></div>
+    <div class="flag-item"><div class="flag-dot dot-green"></div><div><strong>Ongoing weight loss or decreased appetite</strong><div class="spanish">Pérdida de peso continua o poco apetito</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-green"></div><div><strong>Increased fatigue or weakness beyond usual</strong><div class="spanish">Cansancio o debilidad mayor de lo normal</div></div></div>
+    <div class="flag-item"><div class="flag-dot dot-green"></div><div><strong>Rescue inhaler needed more than 2x per week</strong><div class="spanish">Necesita el inhalador de rescate más de 2 veces a la semana</div></div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-top static"><div class="card-title">Important numbers</div></div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Emergency</span><span class="info-val" style="color:#c0392b;font-weight:700">911</span></div>
+      <div class="info-row"><span class="info-label">Desert Oasis 24/7 nurse</span><span class="info-val">(760) 969-6555</span></div>
+      <div class="info-row"><span class="info-label">Tennity ER</span><span class="info-val">760-773-1221</span></div>
+      <div class="info-row"><span class="info-label">PCP Scott Russell DO</span><span class="info-val">760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Desert Oasis urgent care</span><span class="info-val">(760) 775-9641</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- QUESTIONS TO ASK -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-questions" class="panel">
+
+  <div class="section-header">3/26 — PharmD visit (Marcela Amezquita) · tomorrow</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Insulin & medications questions</div></div>
+    <div class="card-body">
+      <div class="q-item"><div class="q-urgent">!</div><div>What insulin are we starting — what is the name, dose, and when exactly does he take it?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>Can we use an insulin pen? He is 81 with limited medical background — we need the simplest device possible.</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>Can you explain how to give insulin in Spanish for his wife? She will be helping him at home.</div></div>
+      <div class="q-item"><div class="q-num">4</div><div>Can we get a FreeStyle Libre CGM (continuous glucose monitor)? No finger pricks — just wave a phone over it. Medicare should cover it since he's on insulin.</div></div>
+      <div class="q-item"><div class="q-num">5</div><div>What blood sugar numbers are too low? What do we do if he gets low? What numbers do we call the doctor about?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div>He is still on glipizide — does this interact with insulin? How do we manage both?</div></div>
+      <div class="q-item"><div class="q-num">7</div><div>Can we confirm he should NOT take ibuprofen or Advil given his kidney function?</div></div>
+      <div class="q-item"><div class="q-num">8</div><div>Can you print a simple Spanish medication schedule he can keep on the fridge?</div></div>
+    </div>
+  </div>
+
+  <div class="section-header">3/30 — PCP visit (Scott Russell DO) · most important</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Critical questions for primary care</div></div>
+    <div class="card-body">
+      <div class="q-item"><div class="q-urgent">!</div><div>Amiodarone was stopped at the ER — why, and what replaces it? Does he need a cardiologist involved?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>What is the status of the vascular surgery referral? Has a surgeon been assigned? When is the surgery?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>What is the status of the pulmonology referral (Shansby Clinic)? When is that appointment?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>His blood pressure was 175/63 at the urgent care visit — is his current blood pressure regimen enough?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div>His kidney function (eGFR 35–43) — is this being monitored? When will labs be repeated?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div>He had open heart surgery — when was it and what was it for exactly? Is there a cardiologist we should be seeing?</div></div>
+      <div class="q-item"><div class="q-num">7</div><div>The liver spot on CT (1.9cm right lobe) — does this need follow-up imaging?</div></div>
+      <div class="q-item"><div class="q-num">8</div><div>Is doxycycline still needed? He has been on it since 1/29/2026.</div></div>
+      <div class="q-item"><div class="q-num">9</div><div>Can you set up proxy MyChart access so his grandson (Brandon) can view his records as a caregiver?</div></div>
+      <div class="q-item"><div class="q-num">10</div><div>What is the target blood sugar range for him specifically given his age and kidney function?</div></div>
+    </div>
+  </div>
+
+  <div class="section-header">Vascular surgery consult (when confirmed)</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Aneurysm surgery questions</div></div>
+    <div class="card-body">
+      <div class="q-item"><div class="q-urgent">!</div><div>What is the exact size of the aneurysm now — has it been measured again since the CT on 3/24?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>Is this open surgery or a less invasive procedure (TEVAR/endovascular)? What are the risks at his age?</div></div>
+      <div class="q-item"><div class="q-num">3</div><div>How urgently does surgery need to happen — is April realistic?</div></div>
+      <div class="q-item"><div class="q-num">4</div><div>What restrictions does he need to follow before surgery — can he lift things, exercise, strain?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div>Will his diabetes and kidney function affect the surgery or recovery?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div>What is the recovery like — will he need rehab or in-home care afterward?</div></div>
+    </div>
+  </div>
+
+  <div class="section-header">Pulmonology consult (when confirmed)</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Lung nodule + breathing questions</div></div>
+    <div class="card-body">
+      <div class="q-item"><div class="q-urgent">!</div><div>What is the plan for the 7x6mm lung nodule — imaging follow-up or biopsy?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>His rescue inhaler is not working well — can we adjust his inhaler regimen?</div></div>
+      <div class="q-item"><div class="q-num">3</div><div>Is the COPD/asthma diagnosis confirmed? What is his baseline lung function?</div></div>
+      <div class="q-item"><div class="q-num">4</div><div>He has kidney disease — are any of his respiratory medications affected by this?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div>Should he be doing pulmonary rehab or breathing exercises at home?</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CAREGIVER GUIDE -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-caregiver" class="panel">
+  <div class="howto-box">This guide is for whoever is helping Grandpa at home — especially his wife. Written in plain language. Print this page and keep it on the refrigerator or somewhere easy to find.</div>
+
+  <div class="section-header">Daily routine</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Every day checklist</div></div>
+    <div class="card-body">
+      <div class="care-step"><div class="care-num">1</div><div class="care-content"><div class="care-title">Check his blood sugar — morning and evening</div><div class="care-body">Use the glucometer or FreeStyle Libre sensor. Write down the number and the time. Call the doctor if the number is below 70 or above 300.</div><div class="spanish-note">Revise el azúcar en la sangre cada mañana y cada noche. Escriba el número. Llame al médico si está abajo de 70 o arriba de 300.</div></div></div>
+      <div class="care-step"><div class="care-num">2</div><div class="care-content"><div class="care-title">Give his medications — with meals</div><div class="care-body">Glipizide must be taken BEFORE eating breakfast and BEFORE eating dinner. Do not give glipizide if he is not going to eat — this can cause dangerously low blood sugar.</div><div class="spanish-note">El glipizide se toma ANTES de desayunar y ANTES de cenar. No lo dé si no va a comer.</div></div></div>
+      <div class="care-step"><div class="care-num">3</div><div class="care-content"><div class="care-title">Give his insulin (once plan is confirmed 3/26)</div><div class="care-body">The exact insulin name, dose, and timing will be confirmed at the pharmacy visit on March 26. Update this section after that visit.</div><div class="spanish-note">El tipo de insulina, la dosis y el horario se confirmarán el 26 de marzo. Actualice esta sección después de esa visita.</div></div></div>
+      <div class="care-step"><div class="care-num">4</div><div class="care-content"><div class="care-title">Controller inhaler — morning and night</div><div class="care-body">The fluticasone/salmeterol inhaler (the bigger one) must be taken every morning and every night — even if he feels fine. This is NOT for emergencies.</div><div class="spanish-note">El inhalador de control se usa cada mañana y cada noche, aunque se sienta bien. No es para emergencias.</div></div></div>
+      <div class="care-step"><div class="care-num">5</div><div class="care-content"><div class="care-title">Watch for warning signs</div><div class="care-body">See the Red Flags tab for the full list. The most important things to watch for: sudden severe chest or back pain (call 911), shaking or sweating (low blood sugar — give juice), and difficulty breathing that gets worse.</div><div class="spanish-note">Vea la lista de señales de alarma. Lo más importante: dolor fuerte en el pecho o la espalda (llame al 911), temblores o sudoración (azúcar baja — dé jugo), y dificultad para respirar que empeora.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section-header">Low blood sugar — what to do</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">If his blood sugar drops below 70 mg/dL</div></div>
+    <div class="card-body">
+      <div class="plain-box"><strong>Signs of low blood sugar</strong>Shaking · sweating · dizziness · sudden hunger · pale skin · confusion · irritability<br><br><em>En español: Temblores, sudoración, mareos, hambre repentina, piel pálida, confusión</em></div>
+      <div class="care-step"><div class="care-num">1</div><div class="care-content"><div class="care-title">Give 4 oz of juice or regular soda (not diet)</div><div class="care-body">Orange juice, apple juice, or regular Coca-Cola. NOT diet drinks.<br><em>Dé 4 onzas de jugo o refresco regular (no dietético)</em></div></div></div>
+      <div class="care-step"><div class="care-num">2</div><div class="care-content"><div class="care-title">Wait 15 minutes and recheck</div><div class="care-body">If still below 70, give another 4 oz of juice and wait 15 more minutes.<br><em>Espere 15 minutos y revise de nuevo</em></div></div></div>
+      <div class="care-step"><div class="care-num">3</div><div class="care-content"><div class="care-title">Call 911 if he is unconscious or won't improve</div><div class="care-body">If he cannot swallow or does not improve after two rounds of juice — call 911 immediately.<br><em>Si no puede tragar o no mejora — llame al 911</em></div></div></div>
+    </div>
+  </div>
+
+  <div class="section-header">Things he must NOT do</div>
+  <div class="card">
+    <div class="card-top static"></div>
+    <div class="card-body">
+      <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Do NOT take ibuprofen, Advil, Motrin, Aleve, or naproxen</strong> — these damage his kidneys which are already weak. Use Tylenol (acetaminophen) instead.<div class="spanish">NO tome ibuprofeno, Advil, Motrin, Aleve ni naproxeno. Use Tylenol.</div></div></div>
+      <div class="flag-item" style="margin-top:8px"><div class="flag-dot dot-red"></div><div><strong>Do NOT take prednisone (steroid pills)</strong> — they raise blood sugar dangerously. This was stopped at the ER.<div class="spanish">NO tome prednisona. Le sube el azúcar de manera peligrosa.</div></div></div>
+      <div class="flag-item" style="margin-top:8px"><div class="flag-dot dot-red"></div><div><strong>Do NOT lift heavy things or strain</strong> — this puts pressure on the aneurysm.<div class="spanish">NO levante cosas pesadas ni haga esfuerzo. Esto presiona el aneurisma.</div></div></div>
+      <div class="flag-item" style="margin-top:8px"><div class="flag-dot dot-red"></div><div><strong>Do NOT skip medications</strong> — especially blood pressure and diabetes medications.<div class="spanish">NO se salte los medicamentos, especialmente los de presión y azúcar.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section-header">Important numbers — keep on the fridge</div>
+  <div class="card">
+    <div class="card-top static"></div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label" style="font-weight:700;color:#c0392b">EMERGENCY</span><span class="info-val" style="font-weight:700;color:#c0392b;font-size:18px">911</span></div>
+      <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
+      <div class="info-row"><span class="info-label">Doctor (Scott Russell DO)</span><span class="info-val">760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Urgent care</span><span class="info-val">(760) 775-9641</span></div>
+      <div class="info-row"><span class="info-label">Grandson Brandon</span><span class="info-val">— add your number here —</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- NOTES -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-notes" class="panel">
+  <div class="section-header">Log — newest first</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-sub">March 25, 2026 — CORRECTION: aneurysm location</div></div>
+    <div class="card-body">Tia Vicky referred to the aneurysm as being "by the stomach / main artery" which led to initial assumption of AAA (abdominal aortic aneurysm). CT records confirm: ascending THORACIC aortic aneurysm — located on the aorta just above the heart going upward. Abdominal aorta is NORMAL per CT. Surgical threshold for ascending thoracic is ~5.5cm (slightly lower than abdominal). At 5cm he is already close.</div>
+  </div>
+  <div class="card">
+    <div class="card-top static"><div class="card-sub">March 25, 2026 — discharge papers reviewed (Eisenhower ER 3/23 + Desert Oasis 3/24)</div></div>
+    <div class="card-body">Open heart surgery confirmed — aortic valve replaced, sternotomy wires on CT. Amiodarone stopped at ER — arrhythmia history suspected, nothing prescribed to replace it. Aneurysm is ascending THORACIC aorta, not abdominal. Lung nodule 7x6mm with irregular margins — pulmonology workup needed. Kidney function reduced (eGFR 35–43). 15lb weight loss in 3 weeks. Dysphagia noted — may be from aneurysm pressing on esophagus. MyChart activation code available — set up before 6/22/2026. PCP March 30 is most critical near-term appointment.</div>
+  </div>
+  <div class="card">
+    <div class="card-top static"><div class="card-sub">March 25, 2026 — via Tia Vicky</div></div>
+    <div class="card-body">ER admission 3/23 for fatigue, sunken eyes, rapid weight loss, low appetite. BG 758 on arrival, came down to 400s. Blood thick and hard to draw. Aneurysm noted at 5cm (Tia said "by stomach" — confirmed thoracic per CT). Appetite returning. DM new — not in family genetics. Surgery planned for April. Steroid shots + oral steroids were from a prior urgent care visit for SOB (separate from ER) — likely contributed to BG spike.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- DOCUMENTS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="panel-documents" class="panel">
+  <div class="howto-box">Save original PDF files to <strong>Apple Notes → Grandpa's Health</strong> folder. Share the folder with family. Page references below tell you where to find specific information in each document.</div>
+
+  <div class="section-header">Record 1 — keep</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Eisenhower Health — Clinical Summary</div><div class="card-sub">Admission 3/23/2026 · 9 pages</div></div>
+      <span class="badge badge-green">Keep pp. 1–9</span>
+    </div>
+    <div class="card-body">
+      <div class="doc-pages">
+        <span>p.1</span> — Patient info, referrals (vascular surgery + pulmonology), PCP follow-up instructions<br>
+        <span>p.2</span> — Encounter diagnoses, problem list, all medications, allergies confirmed, vitals<br>
+        <span>p.3–6</span> — All lab results: CBC, CMP x3, A1c, troponin, ketones, urinalysis<br>
+        <span>p.7</span> — Urinalysis detail, venous blood gas, thyroid labs (TSH, T3, T4)<br>
+        <span>p.8–9</span> — CT findings: AAA, lung nodule, cardiac (valve replacement confirmed), spine, hernias
+      </div>
+      <div class="doc-skip">Skip pp. 10–17 — generic Spanish patient education handouts (diabetes, lung nodule, kidney info) — useful for family education but not clinical data</div>
+    </div>
+  </div>
+
+  <div class="section-header">Record 2 — optional</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Eisenhower — Patient DC Instructions (Spanish)</div><div class="card-sub">Printed 3/24/2026 · patient-facing version</div></div>
+      <span class="badge badge-orange">Keep pp. 1–2, 5</span>
+    </div>
+    <div class="card-body">
+      <div class="doc-pages">
+        <span>p.1</span> — Key instructions in Spanish: stop steroids, start glipizide, stop amiodarone, follow-up orders<br>
+        <span>p.2</span> — Visit summary, diagnoses, medications administered, vitals<br>
+        <span>p.5</span> — Full medication schedule with morning/noon/evening/bedtime visual layout
+      </div>
+      <div class="doc-skip">Skip pp. 3–4, 6–17 — lab list, MyChart signup, handouts, disposal info, smoking cessation</div>
+    </div>
+  </div>
+
+  <div class="section-header">Record 3 — keep</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Desert Oasis — Urgent Care Visit</div><div class="card-sub">Visit 3/24/2026 · 6 pages</div></div>
+      <span class="badge badge-green">Keep pp. 1–5</span>
+    </div>
+    <div class="card-body">
+      <div class="doc-pages">
+        <span>p.1</span> — Assessment: DM impression, AAA confirmed, dysphagia noted, referrals, PCP appt 3/30 scheduled<br>
+        <span>p.2</span> — CBC + CMP comparison 3/23 vs 3/24, PCP appointment details (Scott Russell DO, 3/30)<br>
+        <span>p.3–4</span> — Continued labs: CMP detail, influenza results, urinalysis<br>
+        <span>p.5</span> — Full medication list with start dates, vitals at visit, allergies confirmed
+      </div>
+      <div class="doc-skip">Skip p.6 — patient portal enrollment boilerplate</div>
+    </div>
+  </div>
+
+  <div class="section-header">Future records</div>
+  <div class="card">
+    <div class="card-top static"><div class="card-title">Add new records as they come in</div></div>
+    <div class="card-body" style="color:#636366;font-size:13px;line-height:1.7">After each visit or appointment, ask for a copy of the visit summary and save it to Apple Notes → Grandpa's Health folder. Bring the file to Claude with a note of what happened and the tracker will be updated. Future records to expect:<br><br>
+    · PharmD visit 3/26 — insulin plan document<br>
+    · PCP visit 3/30 — visit summary + updated medication list<br>
+    · Vascular surgery consult — surgical plan<br>
+    · Pulmonology consult — lung nodule workup plan<br>
+    · Repeat labs — kidney function + blood sugar trend</div>
+  </div>
+</div>
+
+</div><!-- end app -->
+
+<script>
+(function(){
+  const correct='Tata0320';
+  const stored=sessionStorage.getItem('tata_auth');
+  if(stored===correct)return;
+  document.body.innerHTML='';
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:#f2f2f7;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif';
+  overlay.innerHTML=`
+    <div style="background:#fff;border-radius:20px;padding:32px 28px;width:300px;box-shadow:0 4px 24px rgba(0,0,0,0.10);text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#1a73e8;margin:0 auto 16px">JL</div>
+      <div style="font-weight:700;font-size:18px;margin-bottom:4px">Tata's Medical Tracker</div>
+      <div style="font-size:13px;color:#636366;margin-bottom:20px">Family access only · Enter password to continue</div>
+      <input id="pw" type="password" placeholder="Password" style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none;text-align:center" onkeydown="if(event.key==='Enter')checkPw()">
+      <div id="pw-err" style="font-size:12px;color:#c0392b;margin-bottom:8px;min-height:16px"></div>
+      <button onclick="checkPw()" style="width:100%;background:#1a73e8;color:#fff;border:none;border-radius:10px;padding:11px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit">Enter</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  window.checkPw=function(){
+    const val=document.getElementById('pw').value;
+    if(val===correct){
+      sessionStorage.setItem('tata_auth',correct);
+      location.reload();
+    } else {
+      document.getElementById('pw-err').textContent='Incorrect password — try again';
+      document.getElementById('pw').value='';
+      document.getElementById('pw').focus();
+    }
+  };
+  setTimeout(()=>document.getElementById('pw').focus(),100);
+})();
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const tabs=['overview','conditions','medications','appointments','visits','surgeries','doctors','labs','redflags','questions','caregiver','notes','documents'];
+  const idx=tabs.indexOf(t);
+  if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggle(el){
+  const body=el.nextElementSibling;
+  const chev=el.querySelector('.chevron');
+  if(body.classList.contains('hidden')){
+    body.classList.remove('hidden');
+    if(chev)chev.classList.add('open');
+  } else {
+    body.classList.add('hidden');
+    if(chev)chev.classList.remove('open');
+  }
+}
+const tabsRow=document.getElementById('tabsRow');
+const tabsFade=document.getElementById('tabsFade');
+function updateFade(){
+  const atEnd=tabsRow.scrollLeft+tabsRow.clientWidth>=tabsRow.scrollWidth-8;
+  tabsFade.style.opacity=atEnd?'0':'1';
+}
+tabsRow.addEventListener('scroll',updateFade);
+window.addEventListener('resize',updateFade);
+updateFade();
+</script>
+</body>
+</html>
