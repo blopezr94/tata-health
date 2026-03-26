@@ -186,6 +186,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="tab" onclick="switchTab('redflags')">🚨 Red Flags</button>
   <button class="tab" onclick="switchTab('questions')">Questions to Ask</button>
   <button class="tab" onclick="switchTab('caregiver')">Caregiver Guide</button>
+  <button class="tab" onclick="switchTab('lifestyle')">Lifestyle & Diet</button>
   <button class="tab" onclick="switchTab('notes')">Notes</button>
   <button class="tab" onclick="switchTab('documents')">Documents</button>
 </div>
@@ -1118,6 +1119,262 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
+<div id="panel-lifestyle" class="panel">
+
+  <div class="howto-box">These are general guidelines based on his current conditions — diabetes, kidney disease, high blood pressure, and heart disease. The nutritionist referral will give him a personalized plan. In the meantime these changes will make a real difference. Small steps are better than no steps.</div>
+
+  <div class="section-header">Drinks — most important change</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Regular Coke and sugary drinks — stop these</div><div class="card-sub">Biggest single change he can make</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">Avoid</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>A single can of regular Coke has 39g of sugar — that alone can spike his blood sugar dramatically. Dark colas also contain phosphorus which is hard on his kidneys. This is one of the most impactful changes he can make right now.</div>
+      <strong>Avoid:</strong> Regular Coke, Pepsi, Sprite, Fanta, horchata, aguas frescas with sugar, juice (even natural), sweet tea, sports drinks like Gatorade<br><br>
+      <strong>Better options:</strong><br>
+      · <strong>Water</strong> — main drink, aim for 6–8 glasses a day<br>
+      · <strong>Coke Zero or Diet Coke</strong> — most realistic swap for someone who loves Coke. No sugar. Phosphorus is still a concern with dark colas long term but eliminating the sugar is the priority right now<br>
+      · <strong>Sparkling water with lime</strong> — La Croix, Topo Chico, or Jarritos mineral water are familiar and culturally comfortable<br>
+      · <strong>Herbal tea unsweetened</strong> — manzanilla (chamomile), jamaica without sugar, te de limon<br>
+      · <strong>Water with lime or cucumber</strong> — agua fresca style but no sugar added<br><br>
+      <div class="spanish-note">El Coke regular tiene demasiada azúcar. Cambiarlo a Coke Zero o agua mineral es uno de los cambios más importantes que puede hacer.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Food — what to reduce</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Red meat and large portions of meat</div><div class="card-sub">Hard on the kidneys · reduce portions significantly</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Reduce</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>His kidneys are already struggling. Protein from meat creates waste products (urea, creatinine) that the kidneys have to filter — the exact things that are elevated in his labs. Too much protein makes the kidneys work even harder and speeds up damage. His daily protein target is roughly 40–55g total for the whole day — one large serving of carne asada can already be 40–50g.</div>
+      <strong>Avoid or significantly reduce:</strong><br>
+      · Carne asada, carnitas, birria, barbacoa in large portions<br>
+      · Chorizo — also very high in fat and sodium<br>
+      · Chicharrón — high fat and sodium<br>
+      · Large portions of any meat at one sitting<br><br>
+      <strong>Better options:</strong><br>
+      · <strong>Chicken or turkey</strong> — lower in phosphorus than red meat, easier on kidneys. Grilled or baked, not fried<br>
+      · <strong>Fish</strong> — tilapia, cod, or huachinango (snapper) are low phosphorus and kidney friendly<br>
+      · <strong>Eggs</strong> — 1–2 eggs is a good moderate protein source<br>
+      · <strong>Smaller portions</strong> — a palm-sized portion of meat (about 3oz) rather than a full plate<br><br>
+      <div class="spanish-note">La carne en grandes cantidades lastima los riñones. Porciones más pequeñas de pollo o pescado son mejores opciones.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Salt and salty foods</div><div class="card-sub">Raises blood pressure · dangerous with the aneurysm</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Reduce</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Salt raises blood pressure. High blood pressure puts extra stress on the bulge in his aorta and can cause it to grow faster or rupture. Keeping blood pressure down is one of the most important things he can do right now.</div>
+      <strong>Avoid or reduce:</strong><br>
+      · Adding salt at the table — remove the salt shaker<br>
+      · Canned soups and canned beans — very high sodium (rinse canned beans well)<br>
+      · Processed meats — chorizo, salami, hot dogs, spam<br>
+      · Salty cheeses — cotija, queso añejo<br>
+      · Chips, crackers, salted snacks<br>
+      · Soy sauce, hot sauces with high sodium<br><br>
+      <strong>Better options:</strong><br>
+      · <strong>Mrs. Dash or similar salt-free seasoning blends</strong> — same flavor punch without sodium. Available at Walmart<br>
+      · <strong>Lime juice</strong> — enhances flavor naturally without salt<br>
+      · <strong>Fresh herbs</strong> — cilantro, oregano, cumin, chili powder (without salt added)<br>
+      · <strong>Homemade salsas</strong> — fresh tomato, onion, cilantro, jalapeño with no added salt<br><br>
+      <div class="spanish-note">Quite el salero de la mesa. Use Mrs. Dash o limón para dar sabor sin sal. Esto es muy importante para proteger el aneurisma.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">High carb staples — tortillas, rice, bread</div><div class="card-sub">Raise blood sugar quickly · reduce portions</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Reduce</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>White tortillas, white rice, white bread, and pan dulce break down into sugar very quickly in the body. For someone with diabetes this causes blood sugar spikes after every meal. The goal is not to eliminate these entirely — that is unrealistic — but to eat smaller amounts and pair them with protein and vegetables to slow the sugar absorption.</div>
+      <strong>Reduce:</strong><br>
+      · Large flour tortillas — one small corn tortilla instead of two large flour ones<br>
+      · White rice in large portions — a small side portion rather than a full bowl<br>
+      · Pan dulce, tamales, atole, champurrado — treats only, not daily<br>
+      · White bread, bolillos in large amounts<br>
+      · Potatoes and potato-heavy dishes — also raise blood sugar and high in potassium<br><br>
+      <strong>Better swaps:</strong><br>
+      · <strong>Small corn tortillas</strong> over large flour ones — lower glycemic index<br>
+      · <strong>More vegetables on the plate</strong> — fill half the plate with vegetables, less space for rice and tortillas<br>
+      · <strong>Beans in moderation</strong> — black or pinto beans have fiber which slows sugar absorption, but limit portions due to potassium and phosphorus content<br><br>
+      <div class="spanish-note">Las tortillas de maíz pequeñas son mejor que las de harina grandes. El arroz y el pan en porciones pequeñas. Llene la mitad del plato con verduras.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">High potassium foods — limit carefully</div><div class="card-sub">His potassium is elevated · these make it worse</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Limit</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>His potassium came back elevated in his labs. Too much potassium with kidney disease can cause dangerous heart rhythm problems. Some of the healthiest-seeming foods are actually very high in potassium and need to be limited.</div>
+      <strong>Limit:</strong><br>
+      · Bananas, oranges, orange juice<br>
+      · Avocado and guacamole — culturally very common but very high potassium<br>
+      · Tomatoes and tomato-based sauces in large amounts<br>
+      · Potatoes — especially boiled or baked with skin<br>
+      · Beans in large portions<br>
+      · Plantains (platanos)<br>
+      · Coconut water — often marketed as healthy but very high potassium<br><br>
+      <strong>Lower potassium alternatives:</strong><br>
+      · <strong>Apples, grapes, strawberries, pineapple</strong> — lower potassium fruits<br>
+      · <strong>Cabbage, cucumber, green beans, chayote</strong> — low potassium vegetables<br>
+      · <strong>Nopales</strong> — surprisingly low potassium and very culturally familiar<br>
+      · <strong>White rice over brown</strong> — lower potassium (one of the few cases where white is better for him)<br><br>
+      <div class="spanish-note">El aguacate, los plátanos, los frijoles en exceso y las naranjas tienen mucho potasio. Los nopales, el pepino, la col y las manzanas son mejores opciones.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Good foods to eat more of</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Foods that work well for his conditions</div><div class="card-sub">Kidney friendly · low sugar · heart healthy</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-green">Encourage</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Vegetables (low potassium, kidney friendly):</strong><br>
+      · Nopales — traditional, low potassium, low sugar, high fiber<br>
+      · Chayote — very kidney friendly, mild flavor, works in many dishes<br>
+      · Cabbage (col) — great in tacos, soups, very low potassium<br>
+      · Cucumber with lime — great snack, no salt<br>
+      · Green beans (ejotes)<br>
+      · Zucchini (calabacita)<br>
+      · Lettuce, cilantro, onion — great as taco bases<br><br>
+      <strong>Proteins (easier on kidneys):</strong><br>
+      · Chicken breast — grilled or baked, not fried<br>
+      · Fish — tilapia, cod, snapper<br>
+      · Eggs — 1 to 2 per day<br><br>
+      <strong>Fruits (lower sugar and potassium):</strong><br>
+      · Apples · strawberries · grapes · pineapple in small portions<br><br>
+      <strong>Snacks:</strong><br>
+      · Cucumber or jicama with lime and Tajin (low sodium version)<br>
+      · Small portion of unsalted crackers<br>
+      · A few walnuts or almonds (small handful only — high phosphorus in large amounts)<br><br>
+      <div class="spanish-note">Los nopales, el chayote, la col, el pepino, el pollo a la plancha y el pescado son muy buenas opciones para él.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Nutrition shakes</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Which shakes are safe — and which to avoid</div><div class="card-sub">High protein shakes are hard on his kidneys</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-orange">Important</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Standard protein shakes or high-protein Ensure-style drinks (30g protein per serving) put a significant load on kidneys that are already struggling. His daily protein target is roughly 40–55g for the whole day. One 30g protein shake uses up most of that before he eats anything.</div>
+      <strong>Avoid:</strong><br>
+      · High protein Walmart Great Value shakes (30g protein) — return these<br>
+      · Regular Ensure, Boost, or similar high-protein shakes<br>
+      · Diabetic-specific shakes with high sugar content<br><br>
+      <strong>Better options — confirm with nutritionist first:</strong><br>
+      · <strong>Nepro</strong> (Abbott) — specifically formulated for kidney disease patients. Lower protein, lower potassium, lower phosphorus<br>
+      · <strong>Suplena</strong> (Abbott) — similar to Nepro, designed for CKD<br>
+      · These are available at most pharmacies and Walmart<br><br>
+      <div class="spanish-note">Los batidos con 30g de proteína son demasiado para sus riñones. Pregúntele al nutricionista sobre Nepro o Suplena que son mejores para él.</div>
+    </div>
+  </div>
+
+  <div class="section-header">What to buy</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Recommended items to get</div><div class="card-sub">Most available at Walmart</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Shopping list</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Medical / monitoring:</strong><br>
+      · Glucometer and test strips — already set up ✓<br>
+      · <strong>Home blood pressure cuff</strong> — monitor morning and evening daily. Omron is a reliable brand available at Walmart for ~$30–40<br>
+      · <strong>Pill organizer</strong> — weekly AM/PM organizer. He is on many medications and this reduces missed doses significantly<br>
+      · <strong>Blood sugar and BP log notebook</strong> — or use a notes app. Date, time, reading, what he ate<br>
+      · <strong>Stool softener (MiraLax or similar)</strong> — straining during bowel movements puts pressure on the aneurysm. Worth discussing with PCP<br><br>
+      <strong>Food and drink:</strong><br>
+      · Coke Zero or Diet Coke<br>
+      · Topo Chico or sparkling water<br>
+      · Mrs. Dash salt-free seasoning<br>
+      · Nepro or Suplena shakes (confirm with nutritionist first)<br>
+      · Nopales, chayote, cabbage, cucumber, jicama<br>
+      · Chicken breast or fish for protein<br><br>
+      <strong>Home safety:</strong><br>
+      · <strong>Non-slip bath mat and shower grab bar</strong> — insulin can cause dizziness, fall risk is real<br>
+      · <strong>Night light for hallway and bathroom</strong> — he will likely wake up at night to urinate<br>
+      · <strong>Glucose tablets or juice boxes</strong> — keep in the bedroom and kitchen in case of low blood sugar at night<br>
+    </div>
+  </div>
+
+  <div class="section-header">At home — physical restrictions</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Things he must not do physically</div><div class="card-sub">Critical given the aneurysm</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-red">Important</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Any activity that raises pressure inside the body — lifting, straining, pushing — puts direct stress on the bulge in his aorta. Until the vascular surgeon has evaluated him and given clearance, he should avoid all of these.</div>
+      <strong>No:</strong><br>
+      · Heavy lifting of any kind — groceries, furniture, grandchildren<br>
+      · Yard work, gardening, shoveling<br>
+      · Straining during bowel movements — use a stool softener<br>
+      · Intense exertion or exercise without doctor clearance<br><br>
+      <strong>OK with care:</strong><br>
+      · Light walking around the house or neighborhood — actually beneficial for blood sugar and circulation<br>
+      · Sitting up, moving around the house normally<br>
+      · Light daily activities<br><br>
+      <div class="spanish-note">No levante cosas pesadas. No haga esfuerzo. Caminar despacio está bien. Nada de trabajo pesado hasta que el cirujano lo evalúe.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Daily monitoring routine</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">What to check and log every day</div><div class="card-sub">Morning and evening</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Daily</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Every morning:</strong><br>
+      · Blood sugar — before eating or drinking anything<br>
+      · Blood pressure — sit quietly for 5 minutes first<br>
+      · Give medications with breakfast<br>
+      · Controller inhaler<br><br>
+      <strong>Every evening:</strong><br>
+      · Blood sugar — before dinner<br>
+      · Blood pressure<br>
+      · Give medications with dinner<br>
+      · Controller inhaler<br><br>
+      <strong>Log everything:</strong> Date · time · blood sugar reading · blood pressure reading · what he ate · how he felt. Bring this log to every doctor visit. It is one of the most valuable things you can give his medical team.<br><br>
+      <strong>Call the doctor if:</strong><br>
+      · Blood sugar below 70 or above 300<br>
+      · Blood pressure above 160/100 consistently<br>
+      · Any sudden severe pain anywhere<br><br>
+      <div class="spanish-note">Cada mañana y cada noche: revise el azúcar, revise la presión, dé los medicamentos. Escriba todo en un cuaderno y llévelo a cada cita médica.</div>
+    </div>
+  </div>
+
+  <div class="section-header">Foot care — diabetes specific</div>
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Checking his feet daily</div><div class="card-sub">Diabetes affects circulation and sensation in the feet</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Daily</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>Why this matters</strong>Diabetes reduces blood flow and sensation to the feet. Small cuts or sores that he cannot feel can become serious infections very quickly. This is one of the most common and preventable complications of diabetes.</div>
+      · Check the bottoms of his feet every day — use a mirror if needed<br>
+      · Look for cuts, blisters, redness, swelling, or sores<br>
+      · Keep feet clean and dry<br>
+      · Wear comfortable shoes with good support — no walking barefoot<br>
+      · Do not cut corns or calluses himself — see a doctor<br>
+      · Call the doctor immediately for any wound on the foot that does not start healing within a day or two<br><br>
+      <div class="spanish-note">Revise los pies de Tata todos los días. Busque cortadas, ampollas o llagas. Los diabéticos pueden no sentir cuando tienen una herida en el pie. No camine descalzo.</div>
+    </div>
+  </div>
+
+</div>
+
 <!-- NOTES -->
 <!-- ═══════════════════════════════════════════════ -->
 <div id="panel-notes" class="panel">
@@ -1237,7 +1494,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  const tabs=['overview','conditions','medications','appointments','visits','surgeries','doctors','labs','redflags','questions','caregiver','notes','documents'];
+  const tabs=['overview','conditions','medications','appointments','visits','surgeries','doctors','labs','redflags','questions','caregiver','lifestyle','notes','documents'];
   const idx=tabs.indexOf(t);
   if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
   document.getElementById('panel-'+t).classList.add('active');
