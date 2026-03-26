@@ -7,10 +7,15 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;font-size:15px}
-.app{max-width:1100px;margin:0 auto;padding:12px 16px 60px}
+.app{max-width:900px;margin:0 auto;padding:12px 16px 60px}
 
 /* PATIENT BAR */
-.patient-bar{background:#fff;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.patient-bar{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.patient-bar-top{display:flex;align-items:center;gap:12px}
+.patient-bar-details{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;padding-top:10px;border-top:1px solid #f2f2f7}
+.patient-detail{display:flex;flex-direction:column;min-width:0}
+.patient-detail-label{font-size:10px;font-weight:600;color:#aeaeb2;text-transform:uppercase;letter-spacing:0.05em;line-height:1.2}
+.patient-detail-val{font-size:13px;font-weight:500;color:#1c1c1e;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .avatar{width:52px;height:52px;border-radius:50%;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#1a73e8;flex-shrink:0}
 .patient-name{font-weight:700;font-size:17px}
 .patient-sub{font-size:12px;color:#636366;margin-top:3px;line-height:1.5}
@@ -155,6 +160,8 @@ mark{background:#fff3cd;border-radius:2px;padding:0 1px;font-style:normal}
 .s-pending{background:#fef3e2;color:#b45309}
 
 /* RESPONSIVE */
+.overview-grid{display:block}
+.overview-full{}
 @media(max-width:480px){
   .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .info-val{font-size:12px}
@@ -176,6 +183,8 @@ mark{background:#fff3cd;border-radius:2px;padding:0 1px;font-style:normal}
   .card-body{font-size:14px;line-height:1.8}
   .section-header{font-size:12px}
   .badge{font-size:12px;padding:4px 11px}
+  .overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .overview-full{grid-column:1/-1}
 }
 </style>
 </head>
@@ -184,14 +193,30 @@ mark{background:#fff3cd;border-radius:2px;padding:0 1px;font-style:normal}
 
 <!-- PATIENT BAR -->
 <div class="patient-bar">
-  <div class="avatar">JL</div>
-  <div style="flex:1;min-width:0">
-    <div class="patient-name">Juan Jose Lopez</div>
-    <div class="patient-sub">DOB: March 20, 1945 · Age 81 · Male · MRN: 5483437<br>No known drug allergies · Primary language: Spanish<br>Primary caregiver: Elia (wife) · 442-334-9035</div>
+  <div class="patient-bar-top">
+    <div class="avatar">JL</div>
+    <div style="flex:1;min-width:0">
+      <div class="patient-name">Juan Jose Lopez <span style="font-size:13px;font-weight:400;color:#636366">· Tata</span></div>
+      <div class="patient-sub">Age 81 · Male · DOB 3/20/1945 · MRN 5483437</div>
+    </div>
   </div>
-  <div style="flex-shrink:0;text-align:right">
-    <span class="badge badge-blue">Eisenhower Health</span><br>
-    <span style="font-size:11px;color:#636366">Molina + Alignment Medicare</span>
+  <div class="patient-bar-details">
+    <div class="patient-detail">
+      <span class="patient-detail-label">Caregiver</span>
+      <span class="patient-detail-val">Elia · 442-334-9035</span>
+    </div>
+    <div class="patient-detail">
+      <span class="patient-detail-label">Language</span>
+      <span class="patient-detail-val">Spanish</span>
+    </div>
+    <div class="patient-detail">
+      <span class="patient-detail-label">PCP</span>
+      <span class="patient-detail-val">Scott Russell DO · 760-610-1500</span>
+    </div>
+    <div class="patient-detail">
+      <span class="patient-detail-label">Insurance</span>
+      <span class="patient-detail-val">Alignment Medicare + Molina</span>
+    </div>
   </div>
 </div>
 
@@ -237,79 +262,89 @@ mark{background:#fff3cd;border-radius:2px;padding:0 1px;font-style:normal}
 <!-- OVERVIEW -->
 <!-- ═══════════════════════════════════════════════ -->
 <div id="panel-overview" class="panel active">
-  <div class="summary-grid">
+  <div class="summary-grid overview-full">
     <div class="metric"><div class="metric-num">8</div><div class="metric-lbl">Conditions</div></div>
     <div class="metric"><div class="metric-num">19</div><div class="metric-lbl">Medications</div></div>
     <div class="metric"><div class="metric-num">4</div><div class="metric-lbl">Visits</div></div>
     <div class="metric"><div class="metric-num">6</div><div class="metric-lbl">Providers</div></div>
   </div>
 
-  <div class="section-header">Next appointment</div>
-  <div class="card" style="border:2px solid #c0392b">
-    <div class="card-top static">
-      <div><div class="card-title">PCP — Scott A. Russell, DO</div><div class="card-sub">March 30, 2026 · Monday · 10:00 AM · CRITICAL</div></div>
-      <span class="badge badge-red">Must attend</span>
-    </div>
-    <div class="card-body">
-      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-610-1500</span></div>
-      <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
-      <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Ozempic · aneurysm surgery · amiodarone replacement · cardiology referral · pulmonology referral · BP · kidneys</span></div>
-    </div>
-  </div>
-
-  <div class="section-header">Active conditions at a glance</div>
-  <div class="card">
-    <div class="card-body" style="padding:14px">
-      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Aortic Aneurysm 5cm</span><span class="info-val">Surgery likely soon · cardiologist 4/7 · 911 for sudden chest/back/stomach pain</span></div>
-      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Diabetes (new)</span><span class="info-val">A1c 10.0 · Ozempic weekly + glipizide · target 80–130 fasting</span></div>
-      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Lung Nodule</span><span class="info-val">7x6mm · pulmonology referral pending · lower urgency</span></div>
-      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Kidney Function</span><span class="info-val">eGFR 35–43 (Stage 3 CKD) · monitor closely · avoid NSAIDs</span></div>
-      <div class="info-row"><span class="info-label" style="color:#1a73e8;font-weight:600">Hypertension</span><span class="info-val">3 BP meds · still elevated · critical to control given aneurysm</span></div>
-      <div class="info-row"><span class="info-label" style="color:#636366;font-weight:600">COPD / Asthma</span><span class="info-val">On inhalers · rescue not working well · pulmonology pending</span></div>
+  <div class="overview-full">
+    <div class="section-header">Next appointment</div>
+    <div class="card" style="border:2px solid #c0392b">
+      <div class="card-top static">
+        <div><div class="card-title">PCP — Scott A. Russell, DO</div><div class="card-sub">March 30, 2026 · Monday · 10:00 AM · CRITICAL</div></div>
+        <span class="badge badge-red">Must attend</span>
+      </div>
+      <div class="card-body">
+        <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-610-1500</span></div>
+        <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
+        <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Ozempic · aneurysm surgery · amiodarone replacement · cardiology referral · pulmonology referral · BP · kidneys</span></div>
+      </div>
     </div>
   </div>
 
-  <div class="section-header">Current medications snapshot</div>
-  <div class="card">
-    <div class="card-body" style="padding:14px">
-      <div class="info-row"><span class="info-label">Ozempic 0.25mg</span><span class="info-val">Weekly injection (started 3/26) · increase to 0.5mg after 4 wks · picked up today ✓</span></div>
-      <div class="info-row"><span class="info-label">glipizide 2.5mg</span><span class="info-val">2x daily before meals · STOP when AM sugar reaches 150</span></div>
-      <div class="info-row"><span class="info-label">metoprolol 50mg</span><span class="info-val">2x daily with meals · heart / BP</span></div>
-      <div class="info-row"><span class="info-label">olmesartan 20mg + amlodipine 10mg</span><span class="info-val">Once daily · blood pressure</span></div>
-      <div class="info-row"><span class="info-label">aspirin 81mg + pravastatin 20mg</span><span class="info-val">Once daily · heart + cholesterol</span></div>
-      <div class="info-row"><span class="info-label">Controller inhaler</span><span class="info-val">Fluticasone/salmeterol · 1 puff 2x daily EVERY day</span></div>
-      <div class="info-row"><span class="info-label">Rescue inhaler</span><span class="info-val">Albuterol · as needed for SOB · not working well per patient</span></div>
-      <div class="info-row"><span class="info-label" style="color:#636366;font-size:11px">+ esomeprazole · finasteride · tamsulosin · doxycycline · fish oil · topical creams</span><span class="info-val" style="font-size:11px;color:#636366">See Medications tab</span></div>
-    </div>
-  </div>
+  <div class="overview-grid">
 
-  <div class="section-header">Referral statuses</div>
-  <div class="card">
-    <div class="card-body" style="padding:14px">
-      <div class="info-row"><span class="info-label" style="color:#1e7e34;font-weight:600">Cardiology ✓</span><span class="info-val">Ali Delbakhsh MD · Desert Care Cardiology · April 7 Tue 10am · (760) 969-6535</span></div>
-      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Pulmonology ⏳</span><span class="info-val">Shansby Clinic · referral submitted but not received · follow up after 3/30 PCP</span></div>
-    </div>
-  </div>
+    <div>
+      <div class="section-header">Active conditions</div>
+      <div class="card">
+        <div class="card-body" style="padding:14px">
+          <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Aortic Aneurysm 5cm</span><span class="info-val">Cardiologist 4/7 · 911 for sudden chest/back/stomach pain</span></div>
+          <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Diabetes (new)</span><span class="info-val">A1c 10.0 · Ozempic + glipizide · target 80–130 fasting</span></div>
+          <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Lung Nodule</span><span class="info-val">7x6mm · pulmonology pending · lower urgency</span></div>
+          <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Kidney (CKD 3)</span><span class="info-val">eGFR 35–43 · monitor · avoid NSAIDs</span></div>
+          <div class="info-row"><span class="info-label" style="color:#1a73e8;font-weight:600">Hypertension</span><span class="info-val">3 BP meds · still elevated · critical given aneurysm</span></div>
+          <div class="info-row"><span class="info-label" style="color:#636366;font-weight:600">COPD / Asthma</span><span class="info-val">On inhalers · rescue not working well</span></div>
+        </div>
+      </div>
 
-  <div class="section-header">Key numbers</div>
-  <div class="card">
-    <div class="card-body" style="padding:14px">
-      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:700">Emergency</span><span class="info-val" style="color:#c0392b;font-weight:700;font-size:16px">911</span></div>
-      <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
-      <div class="info-row"><span class="info-label">PCP Scott Russell DO</span><span class="info-val">760-610-1500</span></div>
-      <div class="info-row"><span class="info-label">Desert Oasis urgent care</span><span class="info-val">(760) 775-9641</span></div>
-      <div class="info-row"><span class="info-label">Elia (wife / caregiver)</span><span class="info-val">442-334-9035</span></div>
-    </div>
-  </div>
+      <div class="section-header">Referral statuses</div>
+      <div class="card">
+        <div class="card-body" style="padding:14px">
+          <div class="info-row"><span class="info-label" style="color:#1e7e34;font-weight:600">Cardiology ✓</span><span class="info-val">Ali Delbakhsh MD · Desert Care · April 7 Tue 10am · (760) 969-6535</span></div>
+          <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Pulmonology ⏳</span><span class="info-val">Shansby Clinic · submitted, not received · follow up after 3/30</span></div>
+        </div>
+      </div>
 
-  <div class="section-header">Patient info</div>
-  <div class="card">
-    <div class="card-body" style="padding:14px">
-      <div class="info-row"><span class="info-label">Home phone</span><span class="info-val">442-230-9513</span></div>
-      <div class="info-row"><span class="info-label">Address</span><span class="info-val">84851 Backbad Avenida Apt 149, Coachella CA 92236</span></div>
-      <div class="info-row"><span class="info-label">Primary insurance</span><span class="info-val">Alignment Health Medicare Advantage (DOHC)</span></div>
-      <div class="info-row"><span class="info-label">Secondary</span><span class="info-val">Molina MCAL HMO</span></div>
+      <div class="section-header">Patient info</div>
+      <div class="card">
+        <div class="card-body" style="padding:14px">
+          <div class="info-row"><span class="info-label">Home phone</span><span class="info-val">442-230-9513</span></div>
+          <div class="info-row"><span class="info-label">Address</span><span class="info-val">84851 Backbad Avenida Apt 149, Coachella CA 92236</span></div>
+          <div class="info-row"><span class="info-label">Primary insurance</span><span class="info-val">Alignment Health Medicare Advantage (DOHC)</span></div>
+          <div class="info-row"><span class="info-label">Secondary</span><span class="info-val">Molina MCAL HMO</span></div>
+        </div>
+      </div>
     </div>
+
+    <div>
+      <div class="section-header">Current medications</div>
+      <div class="card">
+        <div class="card-body" style="padding:14px">
+          <div class="info-row"><span class="info-label">Ozempic 0.25mg</span><span class="info-val">Weekly injection · started 3/26 · picked up today ✓</span></div>
+          <div class="info-row"><span class="info-label">glipizide 2.5mg</span><span class="info-val">2x before meals · STOP when AM sugar reaches 150</span></div>
+          <div class="info-row"><span class="info-label">metoprolol 50mg</span><span class="info-val">2x daily with meals · heart / BP</span></div>
+          <div class="info-row"><span class="info-label">olmesartan 20mg + amlodipine 10mg</span><span class="info-val">Once daily · BP</span></div>
+          <div class="info-row"><span class="info-label">aspirin 81mg + pravastatin 20mg</span><span class="info-val">Once daily · heart + cholesterol</span></div>
+          <div class="info-row"><span class="info-label">Controller inhaler</span><span class="info-val">Fluticasone/salmeterol · 1 puff 2x daily EVERY day</span></div>
+          <div class="info-row"><span class="info-label">Rescue inhaler</span><span class="info-val">Albuterol · as needed for SOB</span></div>
+          <div class="info-row"><span class="info-label" style="color:#636366;font-size:11px">+ esomeprazole · finasteride · tamsulosin · doxycycline · fish oil · topical creams</span><span class="info-val" style="font-size:11px;color:#636366">See Medications tab</span></div>
+        </div>
+      </div>
+
+      <div class="section-header">Key numbers</div>
+      <div class="card">
+        <div class="card-body" style="padding:14px">
+          <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:700">Emergency</span><span class="info-val" style="color:#c0392b;font-weight:700;font-size:16px">911</span></div>
+          <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
+          <div class="info-row"><span class="info-label">PCP Scott Russell DO</span><span class="info-val">760-610-1500</span></div>
+          <div class="info-row"><span class="info-label">Desert Oasis urgent care</span><span class="info-val">(760) 775-9641</span></div>
+          <div class="info-row"><span class="info-label">Elia (wife / caregiver)</span><span class="info-val">442-334-9035</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1571,7 +1606,6 @@ function switchTab(t){
   const idx=tabs.indexOf(t);
   if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
   document.getElementById('panel-'+t).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 function toggle(el){
   const body=el.nextElementSibling;
