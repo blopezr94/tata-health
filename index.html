@@ -1259,15 +1259,18 @@ function toggle(el){
     if(chev)chev.classList.remove('open');
   }
 }
-const tabsRow=document.getElementById('tabsRow');
-const tabsFade=document.getElementById('tabsFade');
-function updateFade(){
-  const atEnd=tabsRow.scrollLeft+tabsRow.clientWidth>=tabsRow.scrollWidth-8;
-  tabsFade.style.opacity=atEnd?'0':'1';
-}
-tabsRow.addEventListener('scroll',updateFade);
-window.addEventListener('resize',updateFade);
-updateFade();
+window.addEventListener('load',function(){
+  const tabsRow=document.getElementById('tabsRow');
+  const tabsFade=document.getElementById('tabsFade');
+  if(!tabsRow||!tabsFade)return;
+  function updateFade(){
+    const atEnd=tabsRow.scrollLeft+tabsRow.clientWidth>=tabsRow.scrollWidth-8;
+    tabsFade.style.opacity=atEnd?'0':'1';
+  }
+  tabsRow.addEventListener('scroll',updateFade);
+  window.addEventListener('resize',updateFade);
+  updateFade();
+});
 </script>
 </body>
 </html>
