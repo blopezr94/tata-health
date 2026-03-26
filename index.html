@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;font-size:15px}
-.app{max-width:800px;margin:0 auto;padding:12px 12px 60px}
+.app{max-width:1100px;margin:0 auto;padding:12px 16px 60px}
 
 /* PATIENT BAR */
 .patient-bar{background:#fff;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
@@ -30,6 +30,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tabs::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
 .tabs-fade{position:absolute;right:0;top:0;bottom:4px;width:64px;background:linear-gradient(to right,rgba(242,242,247,0),rgba(242,242,247,1));pointer-events:none;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;transition:opacity 0.2s}
 .scroll-hint{font-size:20px;color:#888}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-input{width:100%;background:#fff;border:1.5px solid #e0e0e0;border-radius:14px;padding:11px 16px 11px 42px;font-size:14px;font-family:inherit;color:#1c1c1e;transition:border 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.07)}
+.search-input:focus{outline:none;border-color:#1a73e8}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:#aeaeb2;pointer-events:none}
+.search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:#aeaeb2;cursor:pointer;padding:2px 6px;display:none;line-height:1}
+.search-clear.visible{display:block}
+#search-results{display:none}
+#search-results.active{display:block}
+.src-card{background:#fff;border-radius:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.07);overflow:hidden;border-left:3px solid #1a73e8;padding:12px 14px}
+.src-title{font-weight:600;font-size:13px;line-height:1.4;margin-bottom:3px}
+.src-snippet{font-size:12px;color:#636366;line-height:1.6;margin-top:4px}
+.src-tab{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px;background:#e8f0fe;color:#1a73e8;white-space:nowrap;display:inline-block;margin-bottom:4px}
+mark{background:#fff3cd;border-radius:2px;padding:0 1px;font-style:normal}
+.src-empty{text-align:center;color:#aeaeb2;font-size:14px;padding:2rem 0}
+.src-count{font-size:12px;color:#636366;margin-bottom:10px;padding:0 2px}
 .tab{padding:9px 16px;border:1.5px solid #e0e0e0;border-radius:22px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#636366;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all 0.15s}
 .tab.active{background:#1a73e8;color:#fff;border-color:#1a73e8;font-weight:600}
 .panel{display:none}.panel.active{display:block}
@@ -145,6 +160,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .info-val{font-size:12px}
   .tab{padding:8px 12px;font-size:12px}
 }
+@media(min-width:700px){
+  .card-title{font-size:15px}
+  .card-body{font-size:14px}
+  .info-label{font-size:13px}
+  .info-val{font-size:14px}
+  .summary-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .metric-num{font-size:32px}
+}
+@media(min-width:900px){
+  body{font-size:16px}
+  .patient-name{font-size:18px}
+  .tab{font-size:14px;padding:10px 18px}
+  .card-title{font-size:16px}
+  .card-body{font-size:14px;line-height:1.8}
+  .section-header{font-size:12px}
+  .badge{font-size:12px;padding:4px 11px}
+}
 </style>
 </head>
 <body>
@@ -165,26 +197,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- URGENT BANNER -->
 <div class="urgent-banner">
-  <div class="urgent-title">⚠ Upcoming appointments & action items</div>
-  <div class="urgent-item"><div class="udot"></div><div><strong>3/30 Mon 10:00am</strong> — PCP Scott Russell DO · Bermuda Dunes · (760) 610-1500 · CRITICAL — confirm he attends</div></div>
-  <div class="urgent-item"><div class="udot"></div><div><strong>4/7 Tue 10:00am</strong> — Desert Care Cardiology · Ali Delbakhsh MD · 255 N El Cielo Road C326, Palm Springs · (760) 969-6535</div></div>
-  <div class="urgent-item"><div class="udot"></div><div><strong>5/18 Mon 8:15am</strong> — Marcela Amezquita PharmD follow-up · Desert Oasis Suite A103, Indio · (760) 969-6560</div></div>
-  <div class="urgent-item"><div class="udot"></div><div>Cardiology referral — marked URGENT · awaiting callback from Dr. Russell's office · aneurysm priority</div></div>
-  <div class="urgent-item"><div class="udot"></div><div>Pulmonology referral — not yet received by Shansby · follow up with Desert Oasis · separate from cardiology</div></div>
-  <div class="urgent-item"><div class="udot"></div><div>Ozempic — pre-auth submitted · should be approved · call pharmacy later today to confirm fill</div></div>
-  <div class="urgent-item"><div class="udot"></div><div>Labs due around 6/25/2026 — non-fasting · ordered by Marcela Amezquita PharmD</div></div>
+  <div class="urgent-title">⚠ Upcoming & action items</div>
+  <div class="urgent-item"><div class="udot"></div><div><strong>3/30 Mon 10:00am</strong> — PCP Scott Russell DO · 760-610-1500 · CRITICAL</div></div>
+  <div class="urgent-item"><div class="udot"></div><div><strong>4/7 Tue 10:00am</strong> — Desert Care Cardiology · Ali Delbakhsh MD · (760) 969-6535</div></div>
+  <div class="urgent-item"><div class="udot"></div><div><strong>5/18 Mon 8:15am</strong> — Marcela Amezquita PharmD follow-up · (760) 969-6560</div></div>
+  <div class="urgent-item"><div class="udot"></div><div>Pulmonology referral — not yet received by Shansby · follow up at 3/30 PCP visit</div></div>
+  <div class="urgent-item"><div class="udot"></div><div>Ozempic ✓ — approved and being picked up today · Pharmacy of the Desert La Quinta 760-777-1115</div></div>
 </div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-input" id="searchInput" type="search" placeholder="Search medications, conditions, doctors, notes..." autocomplete="off" oninput="runSearch(this.value)">
+  <button class="search-clear" id="searchClear" onclick="clearSearch()">×</button>
+</div>
+<div id="search-results"></div>
 
 <!-- TABS -->
 <div class="tabs-wrap">
 <div class="tabs" id="tabsRow">
   <button class="tab active" onclick="switchTab('overview')">Overview</button>
-  <button class="tab" onclick="switchTab('conditions')">Conditions</button>
+  <button class="tab" onclick="switchTab('history')">History</button>
   <button class="tab" onclick="switchTab('medications')">Medications</button>
   <button class="tab" onclick="switchTab('appointments')">Appointments</button>
   <button class="tab" onclick="switchTab('visits')">Visits</button>
-  <button class="tab" onclick="switchTab('surgeries')">Surgeries</button>
-  <button class="tab" onclick="switchTab('doctors')">Doctors</button>
+  <button class="tab" onclick="switchTab('careteam')">Care Team</button>
   <button class="tab" onclick="switchTab('labs')">Labs</button>
   <button class="tab" onclick="switchTab('redflags')">🚨 Red Flags</button>
   <button class="tab" onclick="switchTab('questions')">Questions to Ask</button>
@@ -207,54 +244,79 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="metric"><div class="metric-num">6</div><div class="metric-lbl">Providers</div></div>
   </div>
 
-  <div class="section-header">Most urgent right now</div>
-  <div class="card">
+  <div class="section-header">Next appointment</div>
+  <div class="card" style="border:2px solid #c0392b">
     <div class="card-top static">
-      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm — 5cm</div><div class="card-sub">Bulge in the main artery near his heart · confirmed March 2026</div></div>
-      <span class="badge badge-red">Urgent</span>
+      <div><div class="card-title">PCP — Scott A. Russell, DO</div><div class="card-sub">March 30, 2026 · Monday · 10:00 AM · CRITICAL</div></div>
+      <span class="badge badge-red">Must attend</span>
     </div>
     <div class="card-body">
-      <div class="plain-box"><strong>What this means in plain language</strong>The main artery that carries blood from his heart has a bulge in it. If it gets to 5.5cm it likely needs emergency surgery. He is at 5cm right now — very close. This is why the vascular surgery appointment must be confirmed as soon as possible.</div>
-      911 immediately for: sudden severe chest, back, or stomach pain · vascular surgery appointment not yet confirmed
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
+      <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Ozempic · aneurysm surgery · amiodarone replacement · cardiology referral · pulmonology referral · BP · kidneys</span></div>
     </div>
   </div>
+
+  <div class="section-header">Active conditions at a glance</div>
   <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">New Diabetes — blood sugar was dangerously high</div><div class="card-sub">Diagnosed March 2026 · A1c 10.0 · glucose peaked at 775</div></div>
-      <span class="badge badge-red">Active</span>
-    </div>
-    <div class="card-body">
-      <div class="plain-box"><strong>What this means in plain language</strong>His blood sugar was nearly 8x the normal level when he arrived at the ER. He is now on glipizide and Ozempic (weekly injection). Blood sugar target: 80–130 fasting, under 180 two hours after eating. Check twice daily — before meals and 2 hours before bed.</div>
+    <div class="card-body" style="padding:14px">
+      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Aortic Aneurysm 5cm</span><span class="info-val">Surgery likely soon · cardiologist 4/7 · 911 for sudden chest/back/stomach pain</span></div>
+      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:600">Diabetes (new)</span><span class="info-val">A1c 10.0 · Ozempic weekly + glipizide · target 80–130 fasting</span></div>
+      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Lung Nodule</span><span class="info-val">7x6mm · pulmonology referral pending · lower urgency</span></div>
+      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Kidney Function</span><span class="info-val">eGFR 35–43 (Stage 3 CKD) · monitor closely · avoid NSAIDs</span></div>
+      <div class="info-row"><span class="info-label" style="color:#1a73e8;font-weight:600">Hypertension</span><span class="info-val">3 BP meds · still elevated · critical to control given aneurysm</span></div>
+      <div class="info-row"><span class="info-label" style="color:#636366;font-weight:600">COPD / Asthma</span><span class="info-val">On inhalers · rescue not working well · pulmonology pending</span></div>
     </div>
   </div>
+
+  <div class="section-header">Current medications snapshot</div>
   <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">Lung Nodule — needs follow-up</div><div class="card-sub">Small spot found on CT scan · March 2026</div></div>
-      <span class="badge badge-orange">Monitoring</span>
+    <div class="card-body" style="padding:14px">
+      <div class="info-row"><span class="info-label">Ozempic 0.25mg</span><span class="info-val">Weekly injection (started 3/26) · increase to 0.5mg after 4 wks · picked up today ✓</span></div>
+      <div class="info-row"><span class="info-label">glipizide 2.5mg</span><span class="info-val">2x daily before meals · STOP when AM sugar reaches 150</span></div>
+      <div class="info-row"><span class="info-label">metoprolol 50mg</span><span class="info-val">2x daily with meals · heart / BP</span></div>
+      <div class="info-row"><span class="info-label">olmesartan 20mg + amlodipine 10mg</span><span class="info-val">Once daily · blood pressure</span></div>
+      <div class="info-row"><span class="info-label">aspirin 81mg + pravastatin 20mg</span><span class="info-val">Once daily · heart + cholesterol</span></div>
+      <div class="info-row"><span class="info-label">Controller inhaler</span><span class="info-val">Fluticasone/salmeterol · 1 puff 2x daily EVERY day</span></div>
+      <div class="info-row"><span class="info-label">Rescue inhaler</span><span class="info-val">Albuterol · as needed for SOB · not working well per patient</span></div>
+      <div class="info-row"><span class="info-label" style="color:#636366;font-size:11px">+ esomeprazole · finasteride · tamsulosin · doxycycline · fish oil · topical creams</span><span class="info-val" style="font-size:11px;color:#636366">See Medications tab</span></div>
     </div>
-    <div class="card-body">
-      <div class="plain-box"><strong>What this means in plain language</strong>A small spot was found in his right lung on the CT scan. Most of the time these are harmless, but because of its irregular edges it needs to be checked further. The lung specialist referral has been placed but the appointment is not yet confirmed.</div>
+  </div>
+
+  <div class="section-header">Referral statuses</div>
+  <div class="card">
+    <div class="card-body" style="padding:14px">
+      <div class="info-row"><span class="info-label" style="color:#1e7e34;font-weight:600">Cardiology ✓</span><span class="info-val">Ali Delbakhsh MD · Desert Care Cardiology · April 7 Tue 10am · (760) 969-6535</span></div>
+      <div class="info-row"><span class="info-label" style="color:#b45309;font-weight:600">Pulmonology ⏳</span><span class="info-val">Shansby Clinic · referral submitted but not received · follow up after 3/30 PCP</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Key numbers</div>
+  <div class="card">
+    <div class="card-body" style="padding:14px">
+      <div class="info-row"><span class="info-label" style="color:#c0392b;font-weight:700">Emergency</span><span class="info-val" style="color:#c0392b;font-weight:700;font-size:16px">911</span></div>
+      <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
+      <div class="info-row"><span class="info-label">PCP Scott Russell DO</span><span class="info-val">760-610-1500</span></div>
+      <div class="info-row"><span class="info-label">Desert Oasis urgent care</span><span class="info-val">(760) 775-9641</span></div>
+      <div class="info-row"><span class="info-label">Elia (wife / caregiver)</span><span class="info-val">442-334-9035</span></div>
     </div>
   </div>
 
   <div class="section-header">Patient info</div>
   <div class="card">
-    <div class="card-top static"><div class="card-title">Contact & Insurance</div></div>
-    <div class="card-body">
+    <div class="card-body" style="padding:14px">
       <div class="info-row"><span class="info-label">Home phone</span><span class="info-val">442-230-9513</span></div>
-      <div class="info-row"><span class="info-label">Wife / caregiver</span><span class="info-val">Elia · 442-334-9035</span></div>
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">84851 Backbad Avenida Apt 149, Coachella CA 92236</span></div>
       <div class="info-row"><span class="info-label">Primary insurance</span><span class="info-val">Alignment Health Medicare Advantage (DOHC)</span></div>
       <div class="info-row"><span class="info-label">Secondary</span><span class="info-val">Molina MCAL HMO</span></div>
-      <div class="info-row"><span class="info-label">MyChart portal</span><span class="info-val">mychart.eisenhowerhealth.org/mychart</span></div>
     </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- CONDITIONS -->
+<!-- HISTORY (conditions + surgeries) -->
 <!-- ═══════════════════════════════════════════════ -->
-<div id="panel-conditions" class="panel">
+<div id="panel-history" class="panel">
   <div class="section-header">Active / urgent — tap to expand</div>
 
   <div class="card">
@@ -399,6 +461,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="plain-box"><strong>In plain language</strong>These were found during the CT scan but were not the reason for the visit. Spinal disc disease means the cushions between his spine bones are worn down — common with age. Diverticulosis means small pouches in the colon — also common. The hernias are small bulges of fatty tissue — not currently causing problems. The liver spot may be a simple cyst and will be monitored.</div>
       Severe L4-L5, L5-S1 disc narrowing · multiple colonic diverticula · bilateral inguinal hernias (2.9cm left, 1.9cm right) · umbilical hernia 1.8cm · 1.9cm hypodense focus right liver lobe (possible cyst)
       <div class="source-ref">📄 Eisenhower CT p.9</div>
+    </div>
+  </div>
+
+  <div class="section-header">Upcoming procedures</div>
+
+  <div class="card" style="border:1.5px solid #c0392b">
+    <div class="card-top static">
+      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm Repair</div><div class="card-sub">Cardiology eval 4/7 · surgery timeline TBD</div></div>
+      <span class="surgery-status s-upcoming">Pending cardiology eval</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this surgery involves</strong>Surgery to repair the bulge in the main artery near his heart. Could be open surgery or a less invasive endovascular procedure — cardiologist Ali Delbakhsh MD will determine the approach. At 5cm approaching 5.5cm surgical threshold.</div>
+      <div class="info-row"><span class="info-label">Cardiologist</span><span class="info-val">Ali Delbakhsh MD · Desert Care Cardiology · April 7 Tue 10am</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6535</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Lung Nodule Workup — imaging or biopsy TBD</div><div class="card-sub">Pulmonology referral pending · lower urgency · separate from aneurysm</div></div>
+      <span class="surgery-status s-pending">Pending pulmonology appt</span>
+    </div>
+    <div class="card-body">
+      <div class="plain-box"><strong>What this may involve</strong>The lung specialist will review the CT images and decide whether to monitor with a repeat scan or proceed with a biopsy. This is specifically for the 7x6mm nodule found on CT — not related to the aneurysm. More clarity expected after 3/30 PCP visit.</div>
+      <div class="info-row"><span class="info-label">Nodule</span><span class="info-val">7x6mm · irregular margins · right middle lobe</span></div>
+      <div class="info-row"><span class="info-label">Referral</span><span class="info-val">Submitted by Dr. Lotfipour (Eisenhower ED) — not yet received by Shansby as of 3/26</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Past surgeries</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Open Heart Surgery — Aortic Valve Replacement</div><div class="card-sub">October 2018 · Eisenhower Health</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="surgery-status s-past">Past</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <div class="plain-box"><strong>What this surgery was</strong>The aortic valve controls blood flow out of the heart. His was not working properly and was surgically replaced. The CT scan shows metal sternotomy wires from when his chest was opened. He was put on amiodarone post-surgery for arrhythmia — amiodarone was stopped at the 3/23 ER visit and has not been replaced.</div>
+      Aortic valve stenosis · sternotomy wires on CT 3/24/2026 · arrhythmia history · amiodarone stopped 3/23 — not replaced yet
+      <div class="source-ref">📄 Eisenhower CT p.8 · problem list p.2</div>
     </div>
   </div>
 </div>
@@ -577,49 +679,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-320-8814 / 760-610-1500</span></div>
       <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">Full follow-up after ER visit · review all new diagnoses</span></div>
-      <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Ozempic progress · aneurysm surgery timeline · amiodarone replacement · cardiology referral status · kidney follow-up · pulmonology referral status</span></div>
+      <div class="info-row"><span class="info-label">Key topics</span><span class="info-val">Ozempic progress · aneurysm surgery timeline · amiodarone replacement · cardiology referral · kidney follow-up · pulmonology referral</span></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Cardiology — Ali Delbakhsh, MD · Desert Care Cardiology</div><div class="card-sub">April 7, 2026 · Tuesday · 10:00 AM · CONFIRMED</div></div>
-      <span class="badge badge-blue">Confirmed</span>
-    </div>
-    <div class="card-body">
-      <div class="info-row"><span class="info-label">Address</span><span class="info-val">255 N El Cielo Road C326, Palm Springs CA</span></div>
-      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6535</span></div>
-      <div class="info-row"><span class="info-label">Specialty</span><span class="info-val">Cardiology — Desert Care Cardiology</span></div>
-      <div class="info-row"><span class="info-label">Note</span><span class="info-val">This IS the cardiology referral appointment — urgent referral confirmed and scheduled</span></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">Cardiology — Desert Care Cardiology</div><div class="card-sub">Ascending thoracic aortic aneurysm · April 7, 2026 · Tuesday · 10:00 AM</div></div>
+      <div><div class="card-title">Cardiology — Ali Delbakhsh, MD · Desert Care Cardiology</div><div class="card-sub">April 7, 2026 · Tuesday · 10:00 AM · Aortic aneurysm evaluation</div></div>
       <span class="badge badge-green">Confirmed</span>
     </div>
     <div class="card-body">
-      <div class="info-row"><span class="info-label">Doctor</span><span class="info-val">Ali Delbakhsh, MD</span></div>
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">255 N El Cielo Road C326, Palm Springs CA</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6535</span></div>
-      <div class="info-row"><span class="info-label">Note</span><span class="info-val">This IS the urgent cardiology referral — appointment already scheduled. Identified via address lookup 3/26.</span></div>
+      <div class="info-row"><span class="info-label">Note</span><span class="info-val">This is the urgent cardiology referral — already scheduled. Identified via address lookup 3/26.</span></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Pulmonology — Shansby Pulmonary Disease Clinic</div><div class="card-sub">Lung nodule follow-up · referral placed by Eisenhower ED</div></div>
-      <span class="badge badge-orange">Not yet received</span>
+      <div><div class="card-title">Pulmonology — Shansby Pulmonary Disease Clinic</div><div class="card-sub">Lung nodule follow-up (7x6mm) · separate from aneurysm · lower urgency</div></div>
+      <span class="badge badge-orange">Not yet scheduled</span>
     </div>
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Shansby Bldg Ste 201, Rancho Mirage CA 92270</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-834-3564</span></div>
-      <div class="info-row"><span class="info-label">Referred by</span><span class="info-val">Dr. Shahram Lotfipour, MD — Eisenhower ED</span></div>
-      <div class="info-row"><span class="info-label">Shansby status</span><span class="info-val">Confirmed they have NOT received referral as of 3/26</span></div>
-      <div class="info-row"><span class="info-label">Dr. Russell status</span><span class="info-val">Confirmed submitted but backlogged — per Tio Chava call 3/26</span></div>
-      <div class="info-row"><span class="info-label">Desert Oasis status</span><span class="info-val">Only showing cardiology referral — pulmonology may be lost in Eisenhower to Desert Oasis handoff or still processing</span></div>
-      <div class="info-row"><span class="info-label">Insurance note</span><span class="info-val">Must route through Desert Oasis due to insurance — not Eisenhower ER</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Referral submitted but not received by Shansby as of 3/26 · follow up with Dr. Russell at 3/30</span></div>
     </div>
   </div>
 
@@ -631,32 +715,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">81880 Dr Carreon Blvd Suite A103, Indio CA 92201</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6560</span></div>
-      <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">Diabetes medication follow-up · Ozempic adjustment · blood sugar review</span></div>
-      <div class="info-row"><span class="info-label">Labs due</span><span class="info-val">Around 6/25/2026 — non-fasting · CBC, CMP, A1c, lipid panel, vitamin D, C-peptide, microalbumin/creatinine ratio</span></div>
+      <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">Diabetes follow-up · Ozempic adjustment · blood sugar review</span></div>
+      <div class="info-row"><span class="info-label">Labs due</span><span class="info-val">Around 6/25/2026 (Thursday) — non-fasting · CBC, CMP, A1c, lipid panel, vitamin D, C-peptide, microalbumin/creatinine ratio</span></div>
     </div>
-  </div>
-
-  <div class="section-header">Past appointments</div>
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">PharmD Visit — Marcela Amezquita, PharmD</div><div class="card-sub">March 26, 2026 · Desert Oasis Suite A103, Indio · completed</div></div>
-      <span class="badge badge-green">Done</span>
-    </div>
-    <div class="card-body">Started Ozempic 0.25mg weekly · glipizide continue until morning sugar reaches 150 · blood sugar targets set 80–130 fasting, under 180 two hours after meals · Metformin ruled out (kidneys) · labs ordered for 6/25/2026 · next PharmD appt 5/18/2026 · Ozempic pre-auth submitted to insurance</div>
-  </div>
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">Immediate Care Follow-up — Desert Oasis</div><div class="card-sub">March 24, 2026 · Michelle Garrido · completed</div></div>
-      <span class="badge badge-green">Done</span>
-    </div>
-    <div class="card-body">BG 344 · A1c 10 confirmed · dysphagia noted · vascular referral placed · insulin management referral sent · PCP appt 3/30 scheduled</div>
-  </div>
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">ER Visit — Tennity ED, Eisenhower Health</div><div class="card-sub">March 23, 2026 · John Keller MD · completed</div></div>
-      <span class="badge badge-green">Done</span>
-    </div>
-    <div class="card-body">Glucose 775 · A1c 10 · AAA 5cm diagnosed · lung nodule found · renal insufficiency · IV fluids + insulin · CT + ECG · troponin normal · discharged same day</div>
   </div>
 </div>
 
@@ -664,7 +725,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- VISITS -->
 <!-- ═══════════════════════════════════════════════ -->
 <div id="panel-visits" class="panel">
-  <div class="section-header">All visits — newest first</div>
+  <div class="section-header">All visits & appointments — newest first</div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Diabetes Management Visit — Marcela Amezquita, PharmD</div><div class="card-sub">March 26, 2026 · Desert Oasis Healthcare · Indio</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">PharmD</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      Started Ozempic 0.25mg weekly · glipizide continues until morning sugar reaches 150 · blood sugar targets: 80–130 fasting, under 180 two hours after meals · check twice daily · Metformin ruled out (kidneys) · labs ordered for 6/25/2026 (non-fasting) · next PharmD appt 5/18/2026 · Ozempic approved by insurance same day · picked up today ✓
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top" onclick="toggle(this)">
+      <div><div class="card-title">Immediate Care Follow-up — Desert Oasis</div><div class="card-sub">March 24, 2026 · Michelle Garrido</div></div>
+      <div style="display:flex;gap:6px;align-items:center"><span class="badge badge-blue">Urgent care</span><span class="chevron">▼</span></div>
+    </div>
+    <div class="card-body hidden">
+      <strong>Reason:</strong> Follow-up after ER for high blood sugar<br>
+      <strong>Blood sugar:</strong> 344 (down from 775 at ER)<br>
+      <strong>A1c:</strong> 10.0 confirmed<br>
+      <strong>Swallowing difficulty (dysphagia) noted</strong> — 15lb weight loss in 3 weeks · aneurysm may be pressing on esophagus<br>
+      <strong>Referrals placed:</strong> Expedited vascular surgery · insulin management referral sent to Priority Care<br>
+      <strong>Next:</strong> PCP Scott Russell DO — March 30, 2026 at 10:00am
+      <div class="source-ref">📄 Desert Oasis Urgent Care pp. 1–5</div>
+    </div>
+  </div>
 
   <div class="card">
     <div class="card-top" onclick="toggle(this)">
@@ -712,55 +799,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <!-- ═══════════════════════════════════════════════ -->
-<!-- SURGERIES & PROCEDURES -->
+<!-- CARE TEAM -->
 <!-- ═══════════════════════════════════════════════ -->
-<div id="panel-surgeries" class="panel">
-  <div class="section-header">Upcoming procedures</div>
+<div id="panel-careteam" class="panel">
 
-  <div class="card" style="border:1.5px solid #c0392b">
-    <div class="card-top static">
-      <div><div class="card-title">Ascending Thoracic Aortic Aneurysm Repair</div><div class="card-sub">Vascular surgery · discussed for April 2026</div></div>
-      <span class="surgery-status s-upcoming">Pending confirmation</span>
-    </div>
-    <div class="card-body">
-      <div class="plain-box"><strong>What this surgery involves</strong>Surgery to repair or reinforce the bulge in the main artery near his heart. This is open heart surgery or a less invasive procedure depending on what the vascular surgeon decides. At 5cm with a threshold of ~5.5cm this needs to happen soon.</div>
-      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Vascular surgery referral placed — no surgeon or date assigned yet</span></div>
-      <div class="info-row"><span class="info-label">Discussed timeline</span><span class="info-val">April 2026 — needs confirmation</span></div>
-      <div class="info-row"><span class="info-label">Action needed</span><span class="info-val">Confirm appointment with vascular surgeon urgently</span></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">Lung Nodule Workup — biopsy or imaging TBD</div><div class="card-sub">Pulmonology to determine next step</div></div>
-      <span class="surgery-status s-pending">Pending pulmonology appt</span>
-    </div>
-    <div class="card-body">
-      <div class="plain-box"><strong>What this may involve</strong>The lung specialist will review the CT images and decide whether to monitor with another scan in a few months, or proceed with a biopsy to test the tissue. A biopsy involves taking a small sample from the nodule — usually done with a needle through the chest or through a camera in the airway (bronchoscopy).</div>
-      <div class="info-row"><span class="info-label">Nodule size</span><span class="info-val">7x6mm · irregular margins</span></div>
-      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Awaiting pulmonology appointment — not confirmed</span></div>
-    </div>
-  </div>
-
-  <div class="section-header">Past surgeries</div>
-
-  <div class="card">
-    <div class="card-top" onclick="toggle(this)">
-      <div><div class="card-title">Open Heart Surgery — Aortic Valve Replacement</div><div class="card-sub">October 2018 · Eisenhower Health (facility to confirm)</div></div>
-      <div style="display:flex;gap:6px;align-items:center"><span class="surgery-status s-past">Past</span><span class="chevron">▼</span></div>
-    </div>
-    <div class="card-body hidden">
-      <div class="plain-box"><strong>What this surgery was</strong>The aortic valve controls blood flow out of the heart. His was not working properly (stenosis — narrowing) and was surgically replaced. The CT scan shows the metal surgical wires (sternotomy wires) from when his chest was opened. This is confirmed as having happened — the date and facility are not yet known.</div>
-      Aortic valve stenosis noted in records 10/15/2018 · sternotomy wires visible on CT 3/24/2026 · was on amiodarone post-surgery (arrhythmia history) · surgery October 2018 · facility to confirm
-      <div class="source-ref">📄 Eisenhower CT p.8 · problem list p.2</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- DOCTORS -->
-<!-- ═══════════════════════════════════════════════ -->
-<div id="panel-doctors" class="panel">
   <div class="section-header">Primary care</div>
   <div class="card">
     <div class="card-top static">
@@ -770,68 +812,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">41120 Washington St, Ste 201, Bermuda Dunes CA 92203</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-320-8814 / 760-610-1500</span></div>
-      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">March 30, 2026 at 10:00am — confirm he attends</span></div>
+      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">March 30, 2026 at 10:00am (Monday) — confirm he attends</span></div>
     </div>
   </div>
 
-  <div class="section-header">Pharmacy / medication management</div>
+  <div class="section-header">Cardiology</div>
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Marcela Amezquita, PharmD</div><div class="card-sub">Clinical Pharmacist — Diabetes Management</div></div>
-      <span class="badge badge-green">Next appt 5/18</span>
-    </div>
-    <div class="card-body">
-      <div class="info-row"><span class="info-label">Facility</span><span class="info-val">Desert Oasis Healthcare</span></div>
-      <div class="info-row"><span class="info-label">Address</span><span class="info-val">81880 Dr Carreon Blvd Suite A103, Indio CA 92201</span></div>
-      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6560</span></div>
-      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">May 18, 2026 at 8:15 AM</span></div>
-    </div>
-  </div>
-
-  <div class="section-header">Specialists — confirmed</div>
-  <div class="card">
-    <div class="card-top static">
-      <div><div class="card-title">Ali Delbakhsh, MD — Desert Care Cardiology</div><div class="card-sub">Cardiology · urgent referral for aortic aneurysm</div></div>
+      <div><div class="card-title">Ali Delbakhsh, MD — Desert Care Cardiology</div><div class="card-sub">Cardiology · aortic aneurysm · urgent referral confirmed scheduled</div></div>
       <span class="badge badge-green">Appt 4/7 Tue</span>
     </div>
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">255 N El Cielo Road C326, Palm Springs CA</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6535</span></div>
-      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">April 7, 2026 at 10:00 AM (Tuesday)</span></div>
-      <div class="info-row"><span class="info-label">Note</span><span class="info-val">This is the urgent cardiology referral — confirmed scheduled</span></div>
+      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">April 7, 2026 (Tuesday) at 10:00 AM</span></div>
+      <div class="info-row"><span class="info-label">Note</span><span class="info-val">Identified via address lookup 3/26 — this is the urgent cardiology referral, already scheduled</span></div>
     </div>
   </div>
+
+  <div class="section-header">Pulmonology</div>
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Shansby Pulmonary Disease Clinic</div><div class="card-sub">Pulmonology — lung nodule · referral placed by Eisenhower ED</div></div>
+      <div><div class="card-title">Shansby Pulmonary Disease Clinic</div><div class="card-sub">Lung nodule follow-up (7x6mm) · separate from aneurysm · lower urgency</div></div>
       <span class="badge badge-orange">Referral not received</span>
     </div>
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Shansby Bldg Ste 201, Rancho Mirage CA 92270</span></div>
       <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-834-3564</span></div>
       <div class="info-row"><span class="info-label">Referred by</span><span class="info-val">Dr. Shahram Lotfipour, MD — Eisenhower ED</span></div>
-      <div class="info-row"><span class="info-label">Shansby</span><span class="info-val">Confirmed NOT received as of 3/26</span></div>
-      <div class="info-row"><span class="info-label">Dr. Russell's office</span><span class="info-val">Confirmed submitted but backlogged — per Tio Chava 3/26</span></div>
-      <div class="info-row"><span class="info-label">Desert Oasis</span><span class="info-val">Only showing cardiology referral — pulmonology may be lost in handoff or still processing</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Shansby confirmed NOT received as of 3/26 · Dr. Russell's office confirmed submitted but backlogged · Desert Oasis only shows cardiology referral · may be lost in handoff or processing</span></div>
       <div class="info-row"><span class="info-label">Insurance</span><span class="info-val">Must route through Desert Oasis — not Eisenhower ER</span></div>
+      <div class="info-row"><span class="info-label">Next step</span><span class="info-val">Follow up with Dr. Russell at 3/30 PCP visit · clarify with Desert Oasis</span></div>
     </div>
   </div>
+
+  <div class="section-header">Pharmacy / diabetes management</div>
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Cardiology — Urgent Referral</div><div class="card-sub">Ascending aortic aneurysm · routed through Desert Oasis</div></div>
-      <span class="badge badge-red">Awaiting callback</span>
+      <div><div class="card-title">Marcela Amezquita, PharmD</div><div class="card-sub">Clinical Pharmacist — Diabetes Management · Desert Oasis</div></div>
+      <span class="badge badge-green">Next appt 5/18</span>
     </div>
     <div class="card-body">
-      <div class="info-row"><span class="info-label">Status</span><span class="info-val">Marked URGENT · awaiting callback from Dr. Russell's office once processed</span></div>
-      <div class="info-row"><span class="info-label">Important</span><span class="info-val">Insurance routes through Desert Oasis — NOT Eisenhower ER for referral inquiries</span></div>
-      <div class="info-row"><span class="info-label">Surgery</span><span class="info-val">April 2026 discussed — pending cardiologist evaluation</span></div>
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">81880 Dr Carreon Blvd Suite A103, Indio CA 92201</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">(760) 969-6560</span></div>
+      <div class="info-row"><span class="info-label">Next appt</span><span class="info-val">May 18, 2026 (Monday) at 8:15 AM</span></div>
+    </div>
+  </div>
+
+  <div class="section-header">Pharmacy — prescriptions</div>
+  <div class="card">
+    <div class="card-top static">
+      <div><div class="card-title">Pharmacy of the Desert — La Quinta</div><div class="card-sub">Primary pharmacy for all prescriptions</div></div>
+    </div>
+    <div class="card-body">
+      <div class="info-row"><span class="info-label">Address</span><span class="info-val">79440 Highway 111, Suite 103, La Quinta CA 92253</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-val">760-777-1115</span></div>
+      <div class="info-row"><span class="info-label">Note</span><span class="info-val">Call to confirm Ozempic fill — pre-auth submitted 3/26, should be approved</span></div>
     </div>
   </div>
 
   <div class="section-header">Emergency & urgent care</div>
   <div class="card">
     <div class="card-top static">
-      <div><div class="card-title">Tennity Emergency Department — Eisenhower Health</div><div class="card-sub">For emergencies and worsening symptoms</div></div>
+      <div><div class="card-title">Tennity Emergency Department — Eisenhower Health</div><div class="card-sub">For emergencies — call 911 first</div></div>
     </div>
     <div class="card-body">
       <div class="info-row"><span class="info-label">Address</span><span class="info-val">39000 Bob Hope Dr, Rancho Mirage CA 92270</span></div>
@@ -1043,31 +1086,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- ═══════════════════════════════════════════════ -->
 <div id="panel-questions" class="panel">
 
-  <div class="section-header">3/26 — PharmD visit · COMPLETED</div>
-  <div class="card">
-    <div class="card-top static"><div class="card-title">Answered at today's visit</div></div>
-    <div class="card-body">
-      <div class="q-item"><div class="q-num">✓</div><div>Started Ozempic 0.25mg weekly — increase to 0.5mg after 4 weeks. Weekly injection, same day each week.</div></div>
-      <div class="q-item"><div class="q-num">✓</div><div>Blood sugar targets: 80–130 fasting · under 180 two hours after meals · check twice daily.</div></div>
-      <div class="q-item"><div class="q-num">✓</div><div>Glipizide continues — stop when morning sugar consistently reaches 150.</div></div>
-      <div class="q-item"><div class="q-num">✓</div><div>Metformin ruled out — kidneys too compromised. Ozempic is the right choice.</div></div>
-      <div class="q-item"><div class="q-num">✓</div><div>Labs ordered for 6/25/2026 — non-fasting. CBC, CMP, A1c, lipid panel, vitamin D, C-peptide, microalbumin/creatinine ratio.</div></div>
-      <div class="q-item"><div class="q-num">✓</div><div>Ozempic pre-auth submitted — should be approved, call pharmacy later today to confirm fill.</div></div>
-    </div>
-  </div>
-
   <div class="section-header">3/30 — PCP visit (Scott Russell DO) · Monday 10:00am</div>
   <div class="card">
     <div class="card-top static"><div class="card-title">Critical questions for primary care</div></div>
     <div class="card-body">
-      <div class="q-item"><div class="q-urgent">!</div><div>Cardiology referral — has it been processed? Who is the cardiologist? When is the appointment?</div></div>
-      <div class="q-item"><div class="q-urgent">!</div><div>Amiodarone was stopped at the ER — why, and what replaces it? Cardiologist needs to address this.</div></div>
-      <div class="q-item"><div class="q-urgent">!</div><div>Pulmonology referral — still not received by Shansby as of 3/26. Office said backlogged. What is the status?</div></div>
-      <div class="q-item"><div class="q-urgent">!</div><div>His blood pressure was 175/63 at the 3/24 urgent care visit — is his BP regimen sufficient given the aneurysm?</div></div>
-      <div class="q-item"><div class="q-num">5</div><div>Kidney function (eGFR 35–43) — when will this be rechecked? Labs are ordered for 6/25 but should kidneys be monitored sooner?</div></div>
-      <div class="q-item"><div class="q-num">7</div><div>He had open heart surgery October 2018 — should there be ongoing cardiology follow-up beyond the current referral?</div></div>
-      <div class="q-item"><div class="q-num">8</div><div>Liver spot on CT (1.9cm right lobe) — does this need follow-up imaging at any point?</div></div>
-      <div class="q-item"><div class="q-num">9</div><div>Is doxycycline still needed? He has been on it since 1/29/2026.</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>Amiodarone was stopped at the ER — why, and what replaces it? Cardiologist will also need to address this at 4/7.</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>Pulmonology referral — still not received by Shansby as of 3/26. Dr. Russell's office said backlogged but submitted. What is the current status?</div></div>
+      <div class="q-item"><div class="q-urgent">!</div><div>His blood pressure was 175/63 at the 3/24 urgent care visit — is his current BP regimen sufficient given the aneurysm?</div></div>
+      <div class="q-item"><div class="q-num">4</div><div>Kidney function (eGFR 35–43) — should this be rechecked sooner than the 6/25 labs?</div></div>
+      <div class="q-item"><div class="q-num">5</div><div>Liver spot on CT (1.9cm right lobe) — does this need follow-up imaging?</div></div>
+      <div class="q-item"><div class="q-num">6</div><div>Is doxycycline still needed? He has been on it since 1/29/2026.</div></div>
     </div>
   </div>
 
@@ -1129,7 +1157,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <div class="section-header">Things he must NOT do</div>
   <div class="card">
-    <div class="card-top static"></div>
     <div class="card-body">
       <div class="flag-item"><div class="flag-dot dot-red"></div><div><strong>Do NOT take ibuprofen, Advil, Motrin, Aleve, or naproxen</strong> — these damage his kidneys which are already weak. Use Tylenol (acetaminophen) instead.<div class="spanish">NO tome ibuprofeno, Advil, Motrin, Aleve ni naproxeno. Use Tylenol.</div></div></div>
       <div class="flag-item" style="margin-top:8px"><div class="flag-dot dot-red"></div><div><strong>Do NOT take prednisone (steroid pills)</strong> — they raise blood sugar dangerously. This was stopped at the ER.<div class="spanish">NO tome prednisona. Le sube el azúcar de manera peligrosa.</div></div></div>
@@ -1140,7 +1167,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <div class="section-header">Important numbers — keep on the fridge</div>
   <div class="card">
-    <div class="card-top static"></div>
     <div class="card-body">
       <div class="info-row"><span class="info-label" style="font-weight:700;color:#c0392b">EMERGENCY</span><span class="info-val" style="font-weight:700;color:#c0392b;font-size:18px">911</span></div>
       <div class="info-row"><span class="info-label">24/7 nurse line</span><span class="info-val">(760) 969-6555</span></div>
@@ -1541,7 +1567,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 function switchTab(t){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  const tabs=['overview','conditions','medications','appointments','visits','surgeries','doctors','labs','redflags','questions','caregiver','lifestyle','notes','documents'];
+  const tabs=['overview','history','medications','appointments','visits','careteam','labs','redflags','questions','caregiver','lifestyle','notes','documents'];
   const idx=tabs.indexOf(t);
   if(idx>=0)document.querySelectorAll('.tab')[idx].classList.add('active');
   document.getElementById('panel-'+t).classList.add('active');
@@ -1558,6 +1584,127 @@ function toggle(el){
     if(chev)chev.classList.remove('open');
   }
 }
+// ── SEARCH ─────────────────────────────────────────
+const TAB_LABELS = {
+  overview:'Overview', history:'History', medications:'Medications',
+  appointments:'Appointments', visits:'Visits', careteam:'Care Team',
+  labs:'Labs', redflags:'Red Flags',
+  questions:'Questions', caregiver:'Caregiver', lifestyle:'Lifestyle & Diet',
+  notes:'Notes', documents:'Documents'
+};
+
+function buildIndex(){
+  const index = [];
+  const tabs = Object.keys(TAB_LABELS);
+  tabs.forEach(tabId => {
+    const panel = document.getElementById('panel-' + tabId);
+    if(!panel) return;
+    const cards = panel.querySelectorAll('.card');
+    cards.forEach(card => {
+      // Get title
+      const titleEl = card.querySelector('.card-title,.care-title,.flag-title,.src-title');
+      const subEl = card.querySelector('.card-sub,.card-sub');
+      const title = titleEl ? titleEl.innerText.trim() : '';
+      const sub = subEl ? subEl.innerText.trim() : '';
+      // Get all text content
+      const fullText = card.innerText || '';
+      if(!fullText.trim()) return;
+      index.push({ tabId, title: title || sub || 'Entry', sub, fullText, card });
+    });
+    // Also index section headers as context
+  });
+  return index;
+}
+
+let searchIndex = null;
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function highlight(text, query){
+  if(!query) return esc(text);
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const re = new RegExp(`(${escaped})`, 'gi');
+  return esc(text).replace(re, '<mark>$1</mark>');
+}
+
+function getSnippet(fullText, query, maxLen=160){
+  const lower = fullText.toLowerCase();
+  const qLower = query.toLowerCase();
+  const idx = lower.indexOf(qLower);
+  if(idx === -1) return fullText.slice(0, maxLen) + '…';
+  const start = Math.max(0, idx - 60);
+  const end = Math.min(fullText.length, idx + qLower.length + 100);
+  let snippet = (start > 0 ? '…' : '') + fullText.slice(start, end) + (end < fullText.length ? '…' : '');
+  return snippet;
+}
+
+function runSearch(query){
+  const q = query.trim();
+  const resultsEl = document.getElementById('search-results');
+  const tabsWrap = document.querySelector('.tabs-wrap');
+  const clearBtn = document.getElementById('searchClear');
+  const panels = document.querySelectorAll('.panel');
+  const urgentBanner = document.querySelector('.urgent-banner');
+
+  clearBtn.classList.toggle('visible', q.length > 0);
+
+  if(q.length < 2){
+    resultsEl.className = '';
+    resultsEl.innerHTML = '';
+    tabsWrap.style.display = '';
+    panels.forEach(p => { if(p.id !== 'panel-overview') p.classList.remove('active'); });
+    document.getElementById('panel-overview').classList.add('active');
+    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+    if(urgentBanner) urgentBanner.style.display = '';
+    return;
+  }
+
+  // Hide tabs and urgent banner during search
+  tabsWrap.style.display = 'none';
+  if(urgentBanner) urgentBanner.style.display = 'none';
+  panels.forEach(p => p.classList.remove('active'));
+
+  if(!searchIndex) searchIndex = buildIndex();
+
+  const qLower = q.toLowerCase();
+  const matches = searchIndex.filter(item =>
+    item.fullText.toLowerCase().includes(qLower)
+  );
+
+  resultsEl.className = 'active';
+
+  if(matches.length === 0){
+    resultsEl.innerHTML = `<div class="src-count">No results for "<strong>${esc(q)}</strong>"</div><div class="src-empty">Try a medication name, condition, doctor, or phone number</div>`;
+    return;
+  }
+
+  let html = `<div class="src-count">${matches.length} result${matches.length===1?'':'s'} for "<strong>${esc(q)}</strong>" — tap a result to jump to that tab</div>`;
+
+  matches.forEach(item => {
+    const snippet = getSnippet(item.fullText, q);
+    html += `<div class="src-card" onclick="jumpTo('${item.tabId}')">
+      <span class="src-tab">${TAB_LABELS[item.tabId]}</span>
+      <div class="src-title">${highlight(item.title, q)}</div>
+      ${item.sub && item.sub !== item.title ? `<div style="font-size:11px;color:#888;margin-bottom:3px">${highlight(item.sub, q)}</div>` : ''}
+      <div class="src-snippet">${highlight(snippet, q)}</div>
+    </div>`;
+  });
+
+  resultsEl.innerHTML = html;
+}
+
+function jumpTo(tabId){
+  clearSearch();
+  switchTab(tabId);
+}
+
+function clearSearch(){
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  runSearch('');
+  input.focus();
+}
+
 window.addEventListener('load',function(){
   const tabsRow=document.getElementById('tabsRow');
   const tabsFade=document.getElementById('tabsFade');
